@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Options;
 using PaymentechCore.Models;
+using PaymentechCore.Models.RequestModels;
 using RestSharp;
 
 namespace PaymentechCore.Services
@@ -12,7 +13,7 @@ namespace PaymentechCore.Services
         public bool Production { get; set; }
     }
 
-    public class PaymentechClient
+    public class PaymentechClient : IPaymentechClient
     {
         private readonly PaymentechClientOptions _options;
         private readonly Endpoint _endpoint;
@@ -29,16 +30,23 @@ namespace PaymentechCore.Services
             _cache = cache;
         }
 
-        public RestRequest _buildRequest(object xmlBody, string traceNumber = null)
+        private ClientRequest _buildRequest(object xmlBody, string traceNumber = null)
         {
             if (string.IsNullOrEmpty(traceNumber))
             {
                 traceNumber = Guid.NewGuid().ToString();
             }
-            var previousRequest = _cache.GetValue(traceNumber);
-            if (!string.IsNullOrEmpty(previousRequest))
+            if (_cache != null)
             {
-                return null;
+                var previousRequest = _cache.GetValue(traceNumber);
+                if (!string.IsNullOrEmpty(previousRequest))
+                {
+                    return new ClientRequest
+                    {
+                        TraceNumber = traceNumber,
+                        PreviousRequest = true,
+                    };
+                }
             }
             var request = new RestRequest(Method.POST);
             var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
@@ -51,10 +59,14 @@ namespace PaymentechCore.Services
 
             request.AddXmlBody(xmlBody);
 
-            return request;
+            return new ClientRequest
+            {
+                Request = request,
+                TraceNumber = traceNumber,
+            };
         }
 
-        public Models.ResponseModels.accountUpdaterRespType UpdateAccount(Models.RequestModels.accountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.accountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -62,11 +74,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.accountUpdaterRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.accountUpdaterRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.accountUpdaterRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.accountUpdaterRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.endOfDayRespType EndOfDay(Models.RequestModels.endOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.endOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -74,11 +98,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.endOfDayRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.endOfDayRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.endOfDayRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.endOfDayRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.flexCacheRespType FlexCache(Models.RequestModels.flexCacheType flexCache, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.flexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = flexCache };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -86,11 +122,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.flexCacheRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.flexCacheRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.flexCacheRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.flexCacheRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.inquiryRespType FlexCache(Models.RequestModels.inquiryType inquiryResp, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.inquiryRespType> FlexCache(Models.RequestModels.inquiryType inquiryResp, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = inquiryResp };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -98,11 +146,24 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.inquiryRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.inquiryRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+
+            var response = _restClient.Execute<Models.ResponseModels.inquiryRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.inquiryRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.markForCaptureRespType FlexCache(Models.RequestModels.markForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.markForCaptureRespType> FlexCache(Models.RequestModels.markForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -110,11 +171,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.markForCaptureRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.markForCaptureRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.markForCaptureRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.markForCaptureRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.newOrderRespType FlexCache(Models.RequestModels.newOrderType newOrder, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.newOrderRespType> FlexCache(Models.RequestModels.newOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = newOrder };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -122,11 +195,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.newOrderRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.newOrderRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.newOrderRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.newOrderRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.profileRespType Profile(Models.RequestModels.profileType profile, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.profileRespType> Profile(Models.RequestModels.profileType profile, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = profile };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -134,11 +219,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.profileRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.profileRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.profileRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.profileRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.reversalRespType Reversal(Models.RequestModels.reversalType reversal, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.reversalRespType> Reversal(Models.RequestModels.reversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = reversal };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -146,11 +243,23 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.reversalRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.reversalRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.reversalRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.reversalRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
 
-        public Models.ResponseModels.safetechFraudAnalysisRespType Reversal(Models.RequestModels.safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType> SafetechFraudAnalysis(Models.RequestModels.safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -158,8 +267,20 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            var response = _restClient.Execute<Models.ResponseModels.safetechFraudAnalysisRespType>(request);
-            return response.Data;
+            if (request.PreviousRequest)
+            {
+                return new ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType>
+                {
+                    TraceNumber = request.TraceNumber,
+                    PreviousRequest = true,
+                };
+            }
+            var response = _restClient.Execute<Models.ResponseModels.safetechFraudAnalysisRespType>(request.Request);
+            return new ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType>
+            {
+                Response = response,
+                TraceNumber = request.TraceNumber,
+            };
         }
     }
 }
