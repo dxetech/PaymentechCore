@@ -66,7 +66,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.accountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -90,7 +90,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.endOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -114,7 +114,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.flexCacheType flexCache, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = flexCache };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -138,9 +138,9 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.inquiryRespType> FlexCache(Models.RequestModels.inquiryType inquiryResp, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.inquiryRespType> Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = inquiryResp };
+            var xmlBody = new Models.RequestModels.Request { Item = inquiry };
             var request = _buildRequest(xmlBody, traceNumber);
             if (request == null)
             {
@@ -163,7 +163,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.markForCaptureRespType> FlexCache(Models.RequestModels.markForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.markForCaptureRespType> MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -187,7 +187,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.newOrderRespType> FlexCache(Models.RequestModels.newOrderType newOrder, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.newOrderRespType> NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = newOrder };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -211,7 +211,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.profileRespType> Profile(Models.RequestModels.profileType profile, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.profileRespType> Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = profile };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -235,7 +235,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.reversalRespType> Reversal(Models.RequestModels.reversalType reversal, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.reversalRespType> Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = reversal };
             var request = _buildRequest(xmlBody, traceNumber);
@@ -259,7 +259,7 @@ namespace PaymentechCore.Services
             };
         }
 
-        public ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType> SafetechFraudAnalysis(Models.RequestModels.safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType> SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
             var request = _buildRequest(xmlBody, traceNumber);

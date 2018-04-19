@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PaymentechCore.Models.RequestModels;
 
 namespace PaymentechCore
 {
     public class PaymentechConstants
     {
+        public enum PaymentechProfileActionTypes
+        {
+            Create,
+            Read,
+            Update,
+            Destroy,
+        }
+
         public const string PROCSTATUS_INVALID_RETRY_TRACE = "9714";
         public const string PROCSTATUS_USER_NOT_FOUND = "9581";
         public const string CARD_TYPE_VISA = "VISA";
@@ -28,8 +37,15 @@ namespace PaymentechCore
         public const string CURRENT_DTD_VERSION = "PTI68";
         public static Dictionary<string, string> AUTH_PLATFORM_BIN = new Dictionary<string, string>
         {
-            {"salem", "000001"},
-            {"pns", "000002"},
+            { "salem", "000001" },
+            { "pns", "000002" },
+        };
+        public static Dictionary<PaymentechProfileActionTypes, ProfileActionTypes> PaymentechProfileActions = new Dictionary<PaymentechProfileActionTypes, ProfileActionTypes>
+        {
+            { PaymentechProfileActionTypes.Create, ProfileActionTypes.C },
+            { PaymentechProfileActionTypes.Read, ProfileActionTypes.R },
+            { PaymentechProfileActionTypes.Update, ProfileActionTypes.U },
+            { PaymentechProfileActionTypes.Destroy, ProfileActionTypes.D },
         };
     }
 }

@@ -87,5 +87,11 @@ namespace PaymentechCore.Services
             }
             return null;
         }
+
+        public static string ConvertAmount(decimal input)
+        {
+            var d = decimal.Round(input, 2);
+            return ConvertAmount(d.ToString());
+        }
     }
 }

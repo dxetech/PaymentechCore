@@ -28,15 +28,15 @@ namespace PaymentechCore.Models.RequestModels
         private object itemField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("AccountUpdater", typeof(accountUpdaterType))]
-        [System.Xml.Serialization.XmlElementAttribute("EndOfDay", typeof(endOfDayType))]
-        [System.Xml.Serialization.XmlElementAttribute("FlexCache", typeof(flexCacheType))]
-        [System.Xml.Serialization.XmlElementAttribute("Inquiry", typeof(inquiryType))]
-        [System.Xml.Serialization.XmlElementAttribute("MarkForCapture", typeof(markForCaptureType))]
-        [System.Xml.Serialization.XmlElementAttribute("NewOrder", typeof(newOrderType))]
-        [System.Xml.Serialization.XmlElementAttribute("Profile", typeof(profileType))]
-        [System.Xml.Serialization.XmlElementAttribute("Reversal", typeof(reversalType))]
-        [System.Xml.Serialization.XmlElementAttribute("SafetechFraudAnalysis", typeof(safetechFraudAnalysisType))]
+        [System.Xml.Serialization.XmlElementAttribute("AccountUpdater", typeof(AccountUpdaterType))]
+        [System.Xml.Serialization.XmlElementAttribute("EndOfDay", typeof(EndOfDayType))]
+        [System.Xml.Serialization.XmlElementAttribute("FlexCache", typeof(FlexCacheType))]
+        [System.Xml.Serialization.XmlElementAttribute("Inquiry", typeof(InquiryType))]
+        [System.Xml.Serialization.XmlElementAttribute("MarkForCapture", typeof(MarkForCaptureType))]
+        [System.Xml.Serialization.XmlElementAttribute("NewOrder", typeof(NewOrderType))]
+        [System.Xml.Serialization.XmlElementAttribute("Profile", typeof(ProfileType))]
+        [System.Xml.Serialization.XmlElementAttribute("Reversal", typeof(ReversalType))]
+        [System.Xml.Serialization.XmlElementAttribute("SafetechFraudAnalysis", typeof(SafetechFraudAnalysisType))]
         public object Item {
             get {
                 return this.itemField;
@@ -52,13 +52,13 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class accountUpdaterType {
+    public partial class AccountUpdaterType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins customerBinField;
+        private ValidRoutingBins customerBinField;
         
         private string customerMerchantIDField;
         
@@ -89,7 +89,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins CustomerBin {
+        public ValidRoutingBins CustomerBin {
             get {
                 return this.customerBinField;
             }
@@ -143,7 +143,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="valid-routing-bins")]
-    public enum validroutingbins {
+    public enum ValidRoutingBins {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("000001")]
@@ -159,9 +159,9 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class baseElementsType {
+    public partial class BaseElementsType {
         
-        private validindustrytypes industryTypeField;
+        private ValidIndustryTypes industryTypeField;
         
         private string cardBrandField;
         
@@ -316,7 +316,7 @@ namespace PaymentechCore.Models.RequestModels
         private string digitalWalletTypeField;
         
         /// <remarks/>
-        public validindustrytypes IndustryType {
+        public ValidIndustryTypes IndustryType {
             get {
                 return this.industryTypeField;
             }
@@ -1090,7 +1090,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="valid-industry-types")]
-    public enum validindustrytypes {
+    public enum ValidIndustryTypes {
         
         /// <remarks/>
         EC,
@@ -1113,21 +1113,21 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class safetechFraudAnalysisType {
+    public partial class SafetechFraudAnalysisType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
         private string terminalIDField;
         
-        private baseElementsType baseElementsField;
+        private BaseElementsType baseElementsField;
         
-        private fraudAnalysisType fraudAnalysisField;
+        private FraudAnalysisType fraudAnalysisField;
         
         /// <remarks/>
         public string OrbitalConnectionUsername {
@@ -1150,7 +1150,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -1180,7 +1180,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public baseElementsType BaseElements {
+        public BaseElementsType BaseElements {
             get {
                 return this.baseElementsField;
             }
@@ -1190,7 +1190,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public fraudAnalysisType FraudAnalysis {
+        public FraudAnalysisType FraudAnalysis {
             get {
                 return this.fraudAnalysisField;
             }
@@ -1205,7 +1205,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class fraudAnalysisType {
+    public partial class FraudAnalysisType {
         
         private string fraudScoreIndicatorField;
         
@@ -1381,7 +1381,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class markForCaptureType {
+    public partial class MarkForCaptureType {
         
         private string orbitalConnectionUsernameField;
         
@@ -1395,7 +1395,7 @@ namespace PaymentechCore.Models.RequestModels
         
         private string taxField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -1534,7 +1534,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -2130,7 +2130,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class reversalType {
+    public partial class ReversalType {
         
         private string orbitalConnectionUsernameField;
         
@@ -2144,7 +2144,7 @@ namespace PaymentechCore.Models.RequestModels
         
         private string orderIDField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -2215,7 +2215,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -2270,13 +2270,13 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class profileType {
+    public partial class ProfileType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins customerBinField;
+        private ValidRoutingBins customerBinField;
         
         private string customerMerchantIDField;
         
@@ -2300,7 +2300,7 @@ namespace PaymentechCore.Models.RequestModels
         
         private string customerCountryCodeField;
         
-        private profileactiontypes customerProfileActionField;
+        private ProfileActionTypes customerProfileActionField;
         
         private string customerProfileOrderOverrideIndField;
         
@@ -2421,7 +2421,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins CustomerBin {
+        public ValidRoutingBins CustomerBin {
             get {
                 return this.customerBinField;
             }
@@ -2541,7 +2541,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public profileactiontypes CustomerProfileAction {
+        public ProfileActionTypes CustomerProfileAction {
             get {
                 return this.customerProfileActionField;
             }
@@ -3045,7 +3045,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="profile-action-types")]
-    public enum profileactiontypes {
+    public enum ProfileActionTypes {
         
         /// <remarks/>
         C,
@@ -3065,13 +3065,13 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class flexCacheType {
+    public partial class FlexCacheType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -3089,11 +3089,11 @@ namespace PaymentechCore.Models.RequestModels
         
         private string shippingRefField;
         
-        private validindustrytypes industryTypeField;
+        private ValidIndustryTypes industryTypeField;
         
-        private yesorno flexAutoAuthIndField;
+        private YesOrNo flexAutoAuthIndField;
         
-        private yesorno flexPartialRedemptionIndField;
+        private YesOrNo flexPartialRedemptionIndField;
         
         private string flexActionField;
         
@@ -3155,7 +3155,7 @@ namespace PaymentechCore.Models.RequestModels
         
         private string shippingMethodField;
         
-        private fraudAnalysisType fraudAnalysisField;
+        private FraudAnalysisType fraudAnalysisField;
         
         /// <remarks/>
         public string OrbitalConnectionUsername {
@@ -3178,7 +3178,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -3268,7 +3268,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validindustrytypes IndustryType {
+        public ValidIndustryTypes IndustryType {
             get {
                 return this.industryTypeField;
             }
@@ -3278,7 +3278,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public yesorno FlexAutoAuthInd {
+        public YesOrNo FlexAutoAuthInd {
             get {
                 return this.flexAutoAuthIndField;
             }
@@ -3288,7 +3288,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public yesorno FlexPartialRedemptionInd {
+        public YesOrNo FlexPartialRedemptionInd {
             get {
                 return this.flexPartialRedemptionIndField;
             }
@@ -3598,7 +3598,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public fraudAnalysisType FraudAnalysis {
+        public FraudAnalysisType FraudAnalysis {
             get {
                 return this.fraudAnalysisField;
             }
@@ -3612,7 +3612,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="yes-or-no")]
-    public enum yesorno {
+    public enum YesOrNo {
         
         /// <remarks/>
         Y,
@@ -3632,13 +3632,13 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class endOfDayType {
+    public partial class EndOfDayType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -3667,7 +3667,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -3722,7 +3722,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class softMerchantDescriptorsType {
+    public partial class SoftMerchantDescriptorsType {
         
         private string sMDDBAField;
         
@@ -3862,17 +3862,17 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class newOrderType {
+    public partial class NewOrderType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validindustrytypes industryTypeField;
+        private ValidIndustryTypes industryTypeField;
         
-        private validtranstypes messageTypeField;
+        private ValidTransTypes messageTypeField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -4122,9 +4122,9 @@ namespace PaymentechCore.Models.RequestModels
         
         private string shippingMethodField;
         
-        private fraudAnalysisType fraudAnalysisField;
+        private FraudAnalysisType fraudAnalysisField;
         
-        private softMerchantDescriptorsType softMerchantDescriptorsField;
+        private SoftMerchantDescriptorsType softMerchantDescriptorsField;
         
         private string cardIndicatorsField;
         
@@ -4279,7 +4279,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validindustrytypes IndustryType {
+        public ValidIndustryTypes IndustryType {
             get {
                 return this.industryTypeField;
             }
@@ -4289,7 +4289,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validtranstypes MessageType {
+        public ValidTransTypes MessageType {
             get {
                 return this.messageTypeField;
             }
@@ -4299,7 +4299,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
@@ -5550,7 +5550,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public fraudAnalysisType FraudAnalysis {
+        public FraudAnalysisType FraudAnalysis {
             get {
                 return this.fraudAnalysisField;
             }
@@ -5560,7 +5560,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public softMerchantDescriptorsType SoftMerchantDescriptors {
+        public SoftMerchantDescriptorsType SoftMerchantDescriptors {
             get {
                 return this.softMerchantDescriptorsField;
             }
@@ -6234,7 +6234,7 @@ namespace PaymentechCore.Models.RequestModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="valid-trans-types")]
-    public enum validtranstypes {
+    public enum ValidTransTypes {
         
         /// <remarks/>
         A,
@@ -6260,13 +6260,13 @@ namespace PaymentechCore.Models.RequestModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class inquiryType {
+    public partial class InquiryType {
         
         private string orbitalConnectionUsernameField;
         
         private string orbitalConnectionPasswordField;
         
-        private validroutingbins bINField;
+        private ValidRoutingBins bINField;
         
         private string merchantIDField;
         
@@ -6297,7 +6297,7 @@ namespace PaymentechCore.Models.RequestModels
         }
         
         /// <remarks/>
-        public validroutingbins BIN {
+        public ValidRoutingBins BIN {
             get {
                 return this.bINField;
             }
