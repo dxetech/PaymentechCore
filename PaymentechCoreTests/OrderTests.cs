@@ -12,23 +12,25 @@ namespace PaymentechCoreTests
     public class OrderTests
     {
         private readonly IPaymentechClient _client;
+        private readonly Credentials _credentials;
 
         public OrderTests()
         {
             _client = new PaymentechTestClient();
+            _credentials = _client.Credentials();
         }
 
         [Fact]
         public void ProfileOrder()
         {
-            var profile = ProfileTests.SetProfileDefaults(ProfileType.CreateProfile());
+            var profile = ProfileTests.SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password));
             var profileResult = _client.Profile(profile);
             Assert.NotNull(profileResult?.Response?.Data);
             var profileData = profileResult.Response.Data;
             Assert.Equal("0", profileData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(profileData.CustomerRefNum));
             var customerRefNum = profileData.CustomerRefNum;
-            var order = new NewOrderType
+            var order = new NewOrderType(_credentials.Username, _credentials.Password)
             {
                 CustomerRefNum = customerRefNum,
                 OrderID = "100001",
@@ -43,7 +45,7 @@ namespace PaymentechCoreTests
         [Fact]
         public void CC_Order()
         {
-            var order = new NewOrderType
+            var order = new NewOrderType(_credentials.Username, _credentials.Password)
             {
                 OrderID = "100001",
                 Amount = PaymentechHelpers.ConvertAmount(10.00m),

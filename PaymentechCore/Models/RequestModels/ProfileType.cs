@@ -4,46 +4,77 @@ namespace PaymentechCore.Models.RequestModels
 {
     public partial class ProfileType
     {
-        public static ProfileType CreateProfile()
+        public ProfileType(
+            string orbitalConnectionUsername,
+            string orbitalConnectionPassword,
+            ValidRoutingBins customerBin = ValidRoutingBins.Item000002)
         {
-            var profile = new ProfileType();
+            OrbitalConnectionUsername = orbitalConnectionUsername;
+            OrbitalConnectionPassword = orbitalConnectionPassword;
+            CustomerBin = customerBin;
+        }
+
+        public static ProfileType CreateProfile(
+            string orbitalConnectionUsername,
+            string orbitalConnectionPassword,
+            ValidRoutingBins customerBin = ValidRoutingBins.Item000002,
+            string customerCountryCode = "US",
+            string customerProfileOrderOverrideInd = "NO",
+            string customerProfileFromOrderInd = "A",
+            string customerAccountType = "CC",
+            string status = "A")
+        {
+            var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerBin);
             profile.CustomerProfileAction = ProfileActionTypes.C;
 
-            profile.CustomerBin = ValidRoutingBins.Item000002;
-            profile.CustomerCountryCode = "US";
-            profile.CustomerProfileOrderOverrideInd = "NO";
-            profile.CustomerProfileFromOrderInd = "A";
-            profile.CustomerAccountType = "CC";
-            profile.Status = "A";
+            profile.CustomerCountryCode = customerCountryCode;
+            profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
+            profile.CustomerProfileFromOrderInd = customerProfileFromOrderInd;
+            profile.CustomerAccountType = customerAccountType;
+            profile.Status = status;
 
             return profile;
         }
 
-        public static ProfileType ReadProfile()
+        public static ProfileType ReadProfile(
+            string orbitalConnectionUsername,
+            string orbitalConnectionPassword,
+            ValidRoutingBins customerBin = ValidRoutingBins.Item000002)
         {
-            var profile = new ProfileType();
+            var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerBin);
             profile.CustomerProfileAction = ProfileActionTypes.R;
 
             return profile;
         }
 
-        public static ProfileType UpdateProfile()
+        public static ProfileType UpdateProfile(
+            string orbitalConnectionUsername,
+            string orbitalConnectionPassword,
+            ValidRoutingBins customerBin = ValidRoutingBins.Item000002,
+            string customerCountryCode = "US",
+            string customerProfileOrderOverrideInd = "NO",
+            string customerProfileFromOrderInd = "A",
+            string customerAccountType = "CC",
+            string status = "A")
         {
-            var profile = new ProfileType();
+            var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerBin);
             profile.CustomerProfileAction = ProfileActionTypes.U;
 
-            profile.CustomerCountryCode = "US";
-            profile.CustomerProfileFromOrderInd = "NO";
-            profile.CustomerProfileFromOrderInd = "S";
-            profile.CustomerAccountType = "CC";
-            profile.Status = "A";
+            profile.CustomerCountryCode = customerCountryCode;
+            profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
+            profile.CustomerProfileFromOrderInd = customerProfileFromOrderInd;
+            profile.CustomerAccountType = customerAccountType;
+            profile.Status = status;
 
             return profile;
         }
 
-        public static ProfileType DestroyProfile()
+        public static ProfileType DestroyProfile(
+            string orbitalConnectionUsername,
+            string orbitalConnectionPassword,
+            ValidRoutingBins customerBin = ValidRoutingBins.Item000002)
         {
-            var profile = new ProfileType();
+            var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerBin);
             profile.CustomerProfileAction = ProfileActionTypes.D;
 
             return profile;

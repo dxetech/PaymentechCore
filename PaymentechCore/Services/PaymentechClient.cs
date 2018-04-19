@@ -66,6 +66,16 @@ namespace PaymentechCore.Services
             };
         }
 
+        public Credentials Credentials()
+        {
+            return _options?.Credentials;
+        }
+
+        public string InterfaceVersion()
+        {
+            return _options?.InterfaceVersion;
+        }
+
         public ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };

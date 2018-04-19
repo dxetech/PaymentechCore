@@ -1,10 +1,13 @@
 using System;
+using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
 
 namespace PaymentechCore.Services
 {
     public interface IPaymentechClient
     {
+        Credentials Credentials();
+        string InterfaceVersion();
         ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null);
         ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null);
         ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null);

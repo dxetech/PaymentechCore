@@ -31,6 +31,16 @@ namespace PaymentechCoreTests
             _client = new PaymentechClient(optionsAccessor, _cache);
         }
 
+        public Credentials Credentials()
+        {
+            return _client.Credentials();
+        }
+
+        public string InterfaceVersion()
+        {
+            return _client.InterfaceVersion();
+        }
+
         public ClientResponse<endOfDayRespType> EndOfDay(EndOfDayType endOfDay, string traceNumber = null)
         {
             return _client.EndOfDay(endOfDay, traceNumber);
