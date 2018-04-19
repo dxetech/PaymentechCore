@@ -18,12 +18,12 @@ namespace PaymentechCoreTests
             _cache = new MemoryCache();
             _clientOptions = new PaymentechClientOptions
             {
-                InterfaceVersion = Environment.GetEnvironmentVariable("PAYMENTECH_INTERFACE_VERSION"),
+                InterfaceVersion = "",
                 Credentials = new Credentials
                 {
-                    MerchantId = Environment.GetEnvironmentVariable("PAYMENTECH_MERCHANT_ID"),
-                    Username = Environment.GetEnvironmentVariable("PAYMENTECH_USERNAME"),
-                    Password = Environment.GetEnvironmentVariable("PAYMENTECH_PASSWORD"),
+                    MerchantId = "",
+                    Username = "",
+                    Password = "",
                 },
                 Production = false,
             };
