@@ -37,9 +37,16 @@ namespace PaymentechCoreTests
         }
 
         [Fact]
+        public void DefaultProfile()
+        {
+            //            var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password));
+
+        }
+
+        [Fact]
         public void ProfileLifecycle()
         {
-            var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password));
+            var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
 
             // Profile creation
             var createResult = _client.Profile(createProfile);
@@ -60,7 +67,7 @@ namespace PaymentechCoreTests
             var customerRefNum = createData.CustomerRefNum;
 
             // Profile reading
-            var readProfile = SetProfileDefaults(ProfileType.ReadProfile(_credentials.Username, _credentials.Password));
+            var readProfile = SetProfileDefaults(ProfileType.ReadProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             readProfile.CustomerRefNum = customerRefNum;
             var readResult = _client.Profile(readProfile);
             Assert.NotNull(readResult?.Response?.Data);
@@ -79,7 +86,7 @@ namespace PaymentechCoreTests
             Assert.Equal(readProfile.CCExpireDate, readData.CCExpireDate);
 
             // Profile updating
-            var updateProfile = SetProfileDefaults(ProfileType.UpdateProfile(_credentials.Username, _credentials.Password));
+            var updateProfile = SetProfileDefaults(ProfileType.UpdateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             updateProfile.CustomerRefNum = customerRefNum;
             updateProfile.CustomerName = "Example Customer";
             updateProfile.CustomerCity = "Philadelphia";
@@ -102,7 +109,7 @@ namespace PaymentechCoreTests
             Assert.Equal(updateProfile.CCExpireDate, updateData.CCExpireDate);
 
             // Profile deletion
-            var deleteProfile = SetProfileDefaults(ProfileType.DestroyProfile(_credentials.Username, _credentials.Password));
+            var deleteProfile = SetProfileDefaults(ProfileType.DestroyProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             deleteProfile.CustomerRefNum = customerRefNum;
             var deleteResult = _client.Profile(deleteProfile);
             Assert.NotNull(deleteResult?.Response?.Data);

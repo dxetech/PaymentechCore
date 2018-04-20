@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Xml.Serialization;
 using Microsoft.Extensions.Options;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
@@ -30,11 +32,16 @@ namespace PaymentechCore.Services
             _cache = cache;
         }
 
-        private ClientRequest _buildRequest(object xmlBody, string traceNumber = null)
+        private ClientRequest _buildRequest(Request request, string traceNumber = null)
         {
             if (string.IsNullOrEmpty(traceNumber))
             {
-                traceNumber = Guid.NewGuid().ToString();
+                var newTrace = Guid.NewGuid().GetHashCode();
+                if (newTrace < 0)
+                {
+                    newTrace = newTrace * -1;
+                }
+                traceNumber = newTrace.ToString();
             }
             if (_cache != null)
             {
@@ -48,20 +55,36 @@ namespace PaymentechCore.Services
                     };
                 }
             }
-            var request = new RestRequest(Method.POST);
+            var restRequest = new RestRequest(Method.POST);
             var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
             var headerDict = headers.ToDictionary();
             foreach (var key in headerDict.Keys)
             {
                 var value = headerDict[key];
-                request.AddHeader(key, value);
+                restRequest.AddHeader(key, value);
             }
 
-            request.AddXmlBody(xmlBody);
+            string body;
+            var serializer = new XmlSerializer(typeof(Request));
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
+            {
+                var ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                serializer.Serialize(writer, request, ns);
+
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                {
+                    body = reader.ReadToEnd();
+                }
+            }
+
+            restRequest.AddBody(body);
 
             return new ClientRequest
             {
-                Request = request,
+                Request = restRequest,
                 TraceNumber = traceNumber,
             };
         }
