@@ -1,11 +1,11 @@
 using System;
 using RestSharp;
 
-namespace PaymentechCore.Models.RequestModels
+namespace PaymentechCore.Models.ResponseModels
 {
-    public class ClientResponse<T>
+    public class ClientResponse
     {
-        public IRestResponse<T> Response { get; set; }
+        public Response Response { get; set; }
         public string TraceNumber { get; set; }
         public bool PreviousRequest { get; set; }
     }

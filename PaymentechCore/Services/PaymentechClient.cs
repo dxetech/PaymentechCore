@@ -1,10 +1,17 @@
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Extensions.Options;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
 using RestSharp;
+using Flurl;
+using Flurl.Http;
+using PaymentechCore.Models.ResponseModels;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace PaymentechCore.Services
 {
@@ -19,7 +26,6 @@ namespace PaymentechCore.Services
     {
         private readonly PaymentechClientOptions _options;
         private readonly Endpoint _endpoint;
-        private readonly RestClient _restClient;
         private readonly IPaymentechCache _cache;
 
         public PaymentechClient(
@@ -28,11 +34,15 @@ namespace PaymentechCore.Services
         {
             _options = optionsAccessor.Value;
             _endpoint = new Endpoint(_options.Credentials, _options.Production);
-            _restClient = new RestClient(_endpoint.Url());
             _cache = cache;
         }
 
-        private ClientRequest _buildRequest(Request request, string traceNumber = null)
+        private ClientResponse _sendRequest(string url, Request request, string traceNumber = null)
+        {
+            return _sendRequestAsync(url, request, traceNumber).GetAwaiter().GetResult();
+        }
+
+        private async Task<ClientResponse> _sendRequestAsync(string url, Request request, string traceNumber = null)
         {
             if (string.IsNullOrEmpty(traceNumber))
             {
@@ -48,30 +58,37 @@ namespace PaymentechCore.Services
                 var previousRequest = _cache.GetValue(traceNumber);
                 if (!string.IsNullOrEmpty(previousRequest))
                 {
-                    return new ClientRequest
+                    return new ClientResponse
                     {
                         TraceNumber = traceNumber,
                         PreviousRequest = true,
                     };
                 }
             }
-            var restRequest = new RestRequest(Method.POST);
+            // var result = url.WithHeaders
+            // var restRequest = new RestRequest(Method.POST);
             var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
-            var headerDict = headers.ToDictionary();
-            foreach (var key in headerDict.Keys)
-            {
-                var value = headerDict[key];
-                restRequest.AddHeader(key, value);
-            }
+
+            var contentType = headers.ContentType();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("MIME-Version", headers.MIME_Version);
+            client.DefaultRequestHeaders.Add("Content-transfer-encoding", headers.ContentTransferEncoding);
+            client.DefaultRequestHeaders.Add("Request-number", headers.RequestNumber);
+            client.DefaultRequestHeaders.Add("Document-type", headers.DocumentType);
+            client.DefaultRequestHeaders.Add("Trace-number", headers.TraceNumber);
+            client.DefaultRequestHeaders.Add("Interface-version", headers.InterfaceVersion);
+            client.DefaultRequestHeaders.Add("MerchantID", headers.MerchantID);
 
             string body;
-            var serializer = new XmlSerializer(typeof(Request));
+            var requestSerializer = new XmlSerializer(typeof(Request));
             using (var stream = new MemoryStream())
             using (var writer = new StreamWriter(stream))
             {
                 var ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
-                serializer.Serialize(writer, request, ns);
+                requestSerializer.Serialize(writer, request, ns);
 
                 stream.Position = 0;
                 using (var reader = new StreamReader(stream))
@@ -80,13 +97,24 @@ namespace PaymentechCore.Services
                 }
             }
 
-            restRequest.AddBody(body);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, "");
+            httpRequest.Content = new StringContent(body);
+            httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            var httpResponse = await client.SendAsync(httpRequest);
+            httpResponse.EnsureSuccessStatusCode();
+            var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
 
-            return new ClientRequest
+            var responseSerializer = new XmlSerializer(typeof(Response));
+            using (var reader = new StringReader(httpResponseContent))
             {
-                Request = restRequest,
-                TraceNumber = traceNumber,
-            };
+                Response response = (Response)responseSerializer.Deserialize(reader);
+
+                return new ClientResponse
+                {
+                    Response = response,
+                    TraceNumber = traceNumber,
+                };
+            }
         }
 
         public Credentials Credentials()
@@ -99,221 +127,58 @@ namespace PaymentechCore.Services
             return _options?.InterfaceVersion;
         }
 
-        public ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.accountUpdaterRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.accountUpdaterRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.accountUpdaterRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.endOfDayRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.endOfDayRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.endOfDayRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
+        public ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = flexCache };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.flexCacheRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.flexCacheRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.flexCacheRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.inquiryRespType> Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
+        public ClientResponse Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = inquiry };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.inquiryRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-
-            var response = _restClient.Execute<Models.ResponseModels.inquiryRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.inquiryRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.markForCaptureRespType> MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.markForCaptureRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.markForCaptureRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.markForCaptureRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.newOrderRespType> NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
+        public ClientResponse NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = newOrder };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.newOrderRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.newOrderRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.newOrderRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.profileRespType> Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
+        public ClientResponse Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = profile };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.profileRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.profileRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.profileRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.reversalRespType> Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
+        public ClientResponse Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = reversal };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.reversalRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.reversalRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.reversalRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
 
-        public ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType> SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
-            var request = _buildRequest(xmlBody, traceNumber);
-            if (request == null)
-            {
-                return null;
-            }
-            if (request.PreviousRequest)
-            {
-                return new ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType>
-                {
-                    TraceNumber = request.TraceNumber,
-                    PreviousRequest = true,
-                };
-            }
-            var response = _restClient.Execute<Models.ResponseModels.safetechFraudAnalysisRespType>(request.Request);
-            return new ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType>
-            {
-                Response = response,
-                TraceNumber = request.TraceNumber,
-            };
+            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using PaymentechCore.Models;
-using PaymentechCore.Models.RequestModels;
+using PaymentechCore.Models.ResponseModels;
 
 namespace PaymentechCore.Services
 {
@@ -8,14 +8,14 @@ namespace PaymentechCore.Services
     {
         Credentials Credentials();
         string InterfaceVersion();
-        ClientResponse<Models.ResponseModels.accountUpdaterRespType> UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.endOfDayRespType> EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.flexCacheRespType> FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.inquiryRespType> Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.markForCaptureRespType> MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.newOrderRespType> NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.profileRespType> Profile(Models.RequestModels.ProfileType profile, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.reversalRespType> Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null);
-        ClientResponse<Models.ResponseModels.safetechFraudAnalysisRespType> SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
+        ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null);
+        ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null);
+        ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null);
+        ClientResponse Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null);
+        ClientResponse MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null);
+        ClientResponse NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null);
+        ClientResponse Profile(Models.RequestModels.ProfileType profile, string traceNumber = null);
+        ClientResponse Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null);
+        ClientResponse SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
     }
 }
