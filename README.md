@@ -1,2 +1,2 @@
 # PaymentechCore
-C# Client for Chase Paymentech
+C# .NET Core Client for Chase Paymentech
