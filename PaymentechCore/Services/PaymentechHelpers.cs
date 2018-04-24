@@ -1,3 +1,4 @@
+using PaymentechCore.Models.RequestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,17 @@ namespace PaymentechCore.Services
 
         public static string CardType(string input)
         {
-            if (string.IsNullOrEmpty(input) || input.Length < 1)
+            if (string.IsNullOrEmpty(input))
+            {
+                return null;
+            }
+            var trimmed = input.Trim();
+            if (trimmed.Length < 1)
             {
                 return null;
             }
 
-            var chars = input.Trim().ToCharArray();
+            var chars = trimmed.ToCharArray();
             if (chars[0] == '4')
             {
                 return "Visa";
@@ -43,13 +49,48 @@ namespace PaymentechCore.Services
             {
                 return "Discover";
             }
-            if (new List<string>() { "34", "37" }.Contains(input.Trim().Substring(0, 2)))
+            if (trimmed.Length < 2)
+            {
+                return null;
+            }
+            if (new List<string>() { "34", "37" }.Contains(trimmed.Substring(0, 2)))
             {
                 return "Amex";
             }
-            if (new List<string>() { "2131", "1800" }.Contains(input.Trim().Substring(0, 4)))
+            if (trimmed.Length < 4)
+            {
+                return null;
+            }
+            if (new List<string>() { "2131", "1800" }.Contains(trimmed.Substring(0, 4)))
             {
                 return "JCB";
+            }
+            return null;
+        }
+        
+        public static string CardSecValInd(NewOrderType order)
+        {
+            // Card Security Presence Indicator
+            // For Discover/Visa
+            // 1     Value is Present
+            // 2     Value on card but illegible
+            // 9     Cardholder states data not available
+            // null if not Visa/Discover
+            if (string.IsNullOrEmpty(order.CardSecVal))
+            {
+                return null;
+            }
+            var cardType = CardType(order.AccountNum);
+            if (cardType == "Visa" || cardType == "Discover")
+            {
+                if (!string.IsNullOrEmpty(order.Exp))
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "9";
+                }
             }
             return null;
         }
