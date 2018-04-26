@@ -39,6 +39,24 @@ namespace PaymentechCore.Services
             return _sendRequestAsync(url, request, traceNumber).GetAwaiter().GetResult();
         }
 
+        private ClientResponse _contentToClientResponse(string content, string traceNumber, bool previousRequest = false)
+        {
+            var responseSerializer = new XmlSerializer(typeof(Response));
+            using (var reader = new StringReader(content))
+            {
+                Response response = (Response)responseSerializer.Deserialize(reader);
+
+                _cache.SetValue(traceNumber, content);
+
+                return new ClientResponse
+                {
+                    Response = response,
+                    TraceNumber = traceNumber,
+                    PreviousRequest = previousRequest,
+                };
+            }
+        }
+
         private async Task<ClientResponse> _sendRequestAsync(string url, Request request, string traceNumber = null)
         {
             if (string.IsNullOrEmpty(traceNumber))
@@ -53,27 +71,10 @@ namespace PaymentechCore.Services
             var now = DateTime.Now;
             if (_cache != null)
             {
-                var previousRequest = _cache.GetValue(traceNumber);
-                if (!string.IsNullOrEmpty(previousRequest))
+                var previousResponse = _cache.GetValue(traceNumber);
+                if (!string.IsNullOrEmpty(previousResponse))
                 {
-                    DateTime date;
-                    try
-                    {
-                        date = DateTime.Parse(previousRequest);
-                    }
-                    catch
-                    {
-                        date = DateTime.Now;
-                    }
-                    var diff = DateTime.Now.Subtract(date);
-                    if (diff.Hours < 1)
-                    {
-                        return new ClientResponse
-                        {
-                            TraceNumber = traceNumber,
-                            PreviousRequest = true,
-                        };
-                    }
+                    return _contentToClientResponse(previousResponse, traceNumber, true);
                 }
             }
             // var result = url.WithHeaders
@@ -115,19 +116,7 @@ namespace PaymentechCore.Services
             httpResponse.EnsureSuccessStatusCode();
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
 
-            var responseSerializer = new XmlSerializer(typeof(Response));
-            using (var reader = new StringReader(httpResponseContent))
-            {
-                Response response = (Response)responseSerializer.Deserialize(reader);
-
-                _cache.SetValue(traceNumber, now.ToString());
-
-                return new ClientResponse
-                {
-                    Response = response,
-                    TraceNumber = traceNumber,
-                };
-            }
+            return _contentToClientResponse(httpResponseContent, traceNumber);
         }
 
         public Credentials Credentials()
