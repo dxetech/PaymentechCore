@@ -50,16 +50,30 @@ namespace PaymentechCore.Services
                 }
                 traceNumber = newTrace.ToString();
             }
+            var now = DateTime.Now;
             if (_cache != null)
             {
                 var previousRequest = _cache.GetValue(traceNumber);
                 if (!string.IsNullOrEmpty(previousRequest))
                 {
-                    return new ClientResponse
+                    DateTime date;
+                    try
                     {
-                        TraceNumber = traceNumber,
-                        PreviousRequest = true,
-                    };
+                        date = DateTime.Parse(previousRequest);
+                    }
+                    catch
+                    {
+                        date = DateTime.Now;
+                    }
+                    var diff = DateTime.Now.Subtract(date);
+                    if (diff.Hours < 1)
+                    {
+                        return new ClientResponse
+                        {
+                            TraceNumber = traceNumber,
+                            PreviousRequest = true,
+                        };
+                    }
                 }
             }
             // var result = url.WithHeaders
@@ -105,6 +119,8 @@ namespace PaymentechCore.Services
             using (var reader = new StringReader(httpResponseContent))
             {
                 Response response = (Response)responseSerializer.Deserialize(reader);
+
+                _cache.SetValue(traceNumber, now.ToString());
 
                 return new ClientResponse
                 {
