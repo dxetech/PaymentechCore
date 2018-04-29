@@ -67,7 +67,7 @@ namespace PaymentechCore.Services
             }
             return null;
         }
-        
+
         public static string CardSecValInd(NewOrderType order)
         {
             // Card Security Presence Indicator
@@ -105,14 +105,15 @@ namespace PaymentechCore.Services
             {
                 return null;
             }
-            if (input.Length == 0)
+            var trimmed = input.Trim();
+            var a = trimmed.Split('.');
+            if (trimmed.Length == 0 || a.Length == 0)
             {
                 return "00";
             }
-            var a = input.Split('.');
-            if (a.Length == 0)
+            if (a.Length == 1)
             {
-                return $"{a}00";
+                return $"{a[0]}00";
             }
             else
             {
