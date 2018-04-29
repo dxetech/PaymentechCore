@@ -3,12 +3,14 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
 using PaymentechCore.Models.ResponseModels;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Net;
 
 namespace PaymentechCore.Services
 {
@@ -25,8 +27,7 @@ namespace PaymentechCore.Services
         private readonly Endpoint _endpoint;
         private readonly IPaymentechCache _cache;
 
-        public PaymentechClient(
-            IOptions<PaymentechClientOptions> optionsAccessor,
+        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor,
             IPaymentechCache cache)
         {
             _options = optionsAccessor.Value;
@@ -45,9 +46,6 @@ namespace PaymentechCore.Services
             using (var reader = new StringReader(content))
             {
                 Response response = (Response)responseSerializer.Deserialize(reader);
-
-                _cache.SetValue(traceNumber, content);
-
                 return new ClientResponse
                 {
                     Response = response,
@@ -59,17 +57,7 @@ namespace PaymentechCore.Services
 
         private async Task<ClientResponse> _sendRequestAsync(string url, Request request, string traceNumber = null)
         {
-            if (string.IsNullOrEmpty(traceNumber))
-            {
-                var newTrace = Guid.NewGuid().GetHashCode();
-                if (newTrace < 0)
-                {
-                    newTrace = newTrace * -1;
-                }
-                traceNumber = newTrace.ToString();
-            }
-            var now = DateTime.Now;
-            if (_cache != null)
+            if (_cache != null && !string.IsNullOrEmpty(traceNumber))
             {
                 var previousResponse = _cache.GetValue(traceNumber);
                 if (!string.IsNullOrEmpty(previousResponse))
@@ -77,9 +65,17 @@ namespace PaymentechCore.Services
                     return _contentToClientResponse(previousResponse, traceNumber, true);
                 }
             }
-            // var result = url.WithHeaders
-            // var restRequest = new RestRequest(Method.POST);
             var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
+
+            if (string.IsNullOrEmpty(headers.TraceNumber))
+            {
+                var newTrace = Guid.NewGuid().GetHashCode();
+                if (newTrace < 0)
+                {
+                    newTrace = newTrace * -1;
+                }
+                headers.TraceNumber = newTrace.ToString();
+            }
 
             var contentType = headers.ContentType();
             var client = new HttpClient();
@@ -113,10 +109,80 @@ namespace PaymentechCore.Services
             httpRequest.Content = new StringContent(body);
             httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             var httpResponse = await client.SendAsync(httpRequest);
-            httpResponse.EnsureSuccessStatusCode();
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
 
-            return _contentToClientResponse(httpResponseContent, traceNumber);
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                var clientResponse = _contentToClientResponse(httpResponseContent, traceNumber);
+
+                var itemType = ResponseTypes.Types[clientResponse.Response.Item.GetType()];
+
+                string procStatus = null;
+                switch (itemType)
+                {
+                    case (int)ResponeTypeIds.AccountUpdaterResp:
+                        var accountUpdater = (accountUpdaterRespType)clientResponse.Response.Item;
+                        procStatus = accountUpdater.ProfileProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.EndOfDayResp:
+                        var endOfDay = (endOfDayRespType)clientResponse.Response.Item;
+                        procStatus = endOfDay.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.FlexCacheResp:
+                        var flexCache = (flexCacheRespType)clientResponse.Response.Item;
+                        procStatus = flexCache.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.InquiryResp:
+                        var inquiry = (inquiryRespType)clientResponse.Response.Item;
+                        procStatus = inquiry.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.MarkForCaptureResp:
+                        var markForCapture = (markForCaptureRespType)clientResponse.Response.Item;
+                        procStatus = markForCapture.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.NewOrderResp:
+                        var newOrder = (newOrderRespType)clientResponse.Response.Item;
+                        procStatus = newOrder.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.ProfileResp:
+                        var profile = (profileRespType)clientResponse.Response.Item;
+                        procStatus = profile.ProfileProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.QuickResp:
+                        var quick = (quickRespType)clientResponse.Response.Item;
+                        procStatus = quick.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.QuickResponse:
+                        var quick_old = (quickRespType_old)clientResponse.Response.Item;
+                        procStatus = quick_old.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.ReversalResp:
+                        var reversal = (reversalRespType)clientResponse.Response.Item;
+                        procStatus = reversal.ProcStatus;
+                        break;
+                    case (int)ResponeTypeIds.SafetechFraudAnalysisResp:
+                        var safetechFraudAnalysis = (safetechFraudAnalysisRespType)clientResponse.Response.Item;
+                        procStatus = safetechFraudAnalysis.ProcStatus;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (procStatus?.Trim() != "0" && procStatus?.Trim() != "00")
+                {
+                    throw new Exception($"Request was unsuccesful - response was {httpResponseContent}");
+                }
+                if (!string.IsNullOrEmpty(traceNumber))
+                {
+                    _cache.SetValue(traceNumber, httpResponseContent);
+                }
+
+                return clientResponse;
+            }
+            else
+            {
+                throw new Exception($"Unsuccesful communication with Chase with response {httpResponseContent}");
+            }
         }
 
         public Credentials Credentials()
