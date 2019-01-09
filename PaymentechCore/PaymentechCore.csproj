@@ -6,13 +6,13 @@
     <Company>DXE Technologies LLC</Company>
     <Authors>James Maxwell</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Description>A .net core client for Chase Paymentech XML API</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="microsoft.extensions.logging" Version="2.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
