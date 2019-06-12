@@ -9,6 +9,7 @@ namespace PaymentechCoreTests
 {
     public class PaymentechTestClient : IPaymentechClient
     {
+        static long MaxTraceNumber = 9999999999999999;
         private readonly IPaymentechCache _cache;
         private readonly PaymentechClientOptions _clientOptions;
         private readonly IPaymentechClient _client;
@@ -40,6 +41,27 @@ namespace PaymentechCoreTests
         public string InterfaceVersion()
         {
             return _client.InterfaceVersion();
+        }
+
+        public IPaymentechCache GetCache()
+        {
+            return _cache;
+        }
+
+        public string NewTraceNumber()
+        {
+            var newTrace = Guid.NewGuid().GetHashCode();
+            if (newTrace < 0)
+            {
+                newTrace = newTrace * -1;
+            }
+            var newTraceStr = newTrace.ToString();
+            var maxLength = MaxTraceNumber.ToString().Length;
+            if (newTraceStr.Length > maxLength)
+            {
+                newTraceStr = newTraceStr.Substring(0, maxLength - 1);
+            }
+            return newTraceStr;
         }
 
         public ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null)

@@ -5,7 +5,12 @@ namespace PaymentechCore.Services
 {
     public class MemoryCache : IPaymentechCache
     {
-        private Dictionary<string, string> _dict = new Dictionary<string, string>();
+        private Dictionary<string, string> _dict { get; set; }
+        
+        public MemoryCache()
+        {
+            _dict = new Dictionary<string, string>();
+        }
 
         public string GetValue(string key)
         {

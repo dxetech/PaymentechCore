@@ -19,7 +19,8 @@ namespace PaymentechCoreTests
         [Fact]
         public void EnvSetup()
         {
-            Assert.True(!string.IsNullOrEmpty(_client.InterfaceVersion()));
+            var interfaceVersion = _client.InterfaceVersion();
+            Assert.True(!string.IsNullOrEmpty(interfaceVersion));
             Assert.True(!string.IsNullOrEmpty(_credentials.Username));
             Assert.True(!string.IsNullOrEmpty(_credentials.Password));
             Assert.True(!string.IsNullOrEmpty(_credentials.MerchantId));

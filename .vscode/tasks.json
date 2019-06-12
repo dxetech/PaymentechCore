@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-tests",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/PaymentechCoreTests/PaymentechCoreTests.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        }
+    ]
+}

@@ -38,13 +38,6 @@ namespace PaymentechCoreTests
         }
 
         [Fact]
-        public void DefaultProfile()
-        {
-            //            var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password));
-
-        }
-
-        [Fact]
         public void ProfileLifecycle()
         {
             var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));

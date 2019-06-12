@@ -8,6 +8,8 @@ namespace PaymentechCore.Services
     {
         Credentials Credentials();
         string InterfaceVersion();
+        IPaymentechCache GetCache();
+        string NewTraceNumber();
         ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null);
         ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null);
         ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null);

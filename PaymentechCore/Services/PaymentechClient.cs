@@ -23,6 +23,7 @@ namespace PaymentechCore.Services
 
     public class PaymentechClient : IPaymentechClient
     {
+        static long MaxTraceNumber = 9999999999999999;
         private readonly PaymentechClientOptions _options;
         private readonly Endpoint _endpoint;
         private readonly IPaymentechCache _cache;
@@ -57,27 +58,29 @@ namespace PaymentechCore.Services
 
         private async Task<ClientResponse> _sendRequestAsync(string url, Request request, string traceNumber = null)
         {
-            if (_cache != null && !string.IsNullOrEmpty(traceNumber))
-            {
-                var previousResponse = _cache.GetValue(traceNumber);
-                if (!string.IsNullOrEmpty(previousResponse))
-                {
-                    return _contentToClientResponse(previousResponse, traceNumber, true);
-                }
-                else
-                {
-                    throw new Exception($"Empty previous response for {traceNumber}");
-                }
-            }
-
             if (string.IsNullOrEmpty(traceNumber))
             {
-                var newTrace = Guid.NewGuid().GetHashCode();
-                if (newTrace < 0)
+                traceNumber = NewTraceNumber();
+            }
+            else
+            {
+                long traceNumberVal;
+                if (!Int64.TryParse(traceNumber, out traceNumberVal))
                 {
-                    newTrace = newTrace * -1;
+                    throw new Exception("Trace number must convert to int64");
                 }
-                traceNumber = newTrace.ToString();
+                if (traceNumberVal > MaxTraceNumber)
+                {
+                    throw new Exception("Trace number larger then accepted maximum");
+                }
+                if (_cache != null)
+                {
+                    var previousResponse = _cache.GetValue(traceNumber);
+                    if (!string.IsNullOrEmpty(previousResponse))
+                    {
+                        return _contentToClientResponse(previousResponse, traceNumber, true);
+                    }
+                }
             }
 
             var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
@@ -109,6 +112,7 @@ namespace PaymentechCore.Services
                     requestBody = reader.ReadToEnd();
                 }
             }
+
             if (string.IsNullOrEmpty(requestBody))
             {
                 throw new Exception("Request body is empty");
@@ -120,76 +124,72 @@ namespace PaymentechCore.Services
             var httpResponse = await client.SendAsync(httpRequest);
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
 
-            _cache.SetValue(traceNumber, httpResponseContent);
-
-            if (httpResponse.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(httpResponseContent))
             {
-                var clientResponse = _contentToClientResponse(httpResponseContent, traceNumber);
-
-                var itemType = ResponseTypes.Types[clientResponse.Response.Item.GetType()];
-
-                string procStatus = null;
-                switch (itemType)
-                {
-                    case (int)ResponeTypeIds.AccountUpdaterResp:
-                        var accountUpdater = (accountUpdaterRespType)clientResponse.Response.Item;
-                        procStatus = accountUpdater.ProfileProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.EndOfDayResp:
-                        var endOfDay = (endOfDayRespType)clientResponse.Response.Item;
-                        procStatus = endOfDay.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.FlexCacheResp:
-                        var flexCache = (flexCacheRespType)clientResponse.Response.Item;
-                        procStatus = flexCache.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.InquiryResp:
-                        var inquiry = (inquiryRespType)clientResponse.Response.Item;
-                        procStatus = inquiry.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.MarkForCaptureResp:
-                        var markForCapture = (markForCaptureRespType)clientResponse.Response.Item;
-                        procStatus = markForCapture.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.NewOrderResp:
-                        var newOrder = (newOrderRespType)clientResponse.Response.Item;
-                        procStatus = newOrder.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.ProfileResp:
-                        var profile = (profileRespType)clientResponse.Response.Item;
-                        procStatus = profile.ProfileProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.QuickResp:
-                        var quick = (quickRespType)clientResponse.Response.Item;
-                        procStatus = quick.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.QuickResponse:
-                        var quick_old = (quickRespType_old)clientResponse.Response.Item;
-                        procStatus = quick_old.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.ReversalResp:
-                        var reversal = (reversalRespType)clientResponse.Response.Item;
-                        procStatus = reversal.ProcStatus;
-                        break;
-                    case (int)ResponeTypeIds.SafetechFraudAnalysisResp:
-                        var safetechFraudAnalysis = (safetechFraudAnalysisRespType)clientResponse.Response.Item;
-                        procStatus = safetechFraudAnalysis.ProcStatus;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (procStatus?.Trim() != "0" && procStatus?.Trim() != "00")
-                {
-                    throw new Exception($"Request was unsuccesful - response was {httpResponseContent}");
-                }
-
-                return clientResponse;
+                throw new Exception("Response content is empty");
             }
-            else
+
+            if (_cache != null)
             {
-                throw new Exception($"Unsuccesful communication with Chase with response {httpResponseContent}");
+                _cache.SetValue(traceNumber, httpResponseContent);
             }
+
+            var clientResponse = _contentToClientResponse(httpResponseContent, traceNumber);
+
+            var itemType = ResponseTypes.Types[clientResponse.Response.Item.GetType()];
+
+            string procStatus = null;
+            switch (itemType)
+            {
+                case (int)ResponeTypeIds.AccountUpdaterResp:
+                    var accountUpdater = (accountUpdaterRespType)clientResponse.Response.Item;
+                    procStatus = accountUpdater.ProfileProcStatus;
+                    break;
+                case (int)ResponeTypeIds.EndOfDayResp:
+                    var endOfDay = (endOfDayRespType)clientResponse.Response.Item;
+                    procStatus = endOfDay.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.FlexCacheResp:
+                    var flexCache = (flexCacheRespType)clientResponse.Response.Item;
+                    procStatus = flexCache.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.InquiryResp:
+                    var inquiry = (inquiryRespType)clientResponse.Response.Item;
+                    procStatus = inquiry.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.MarkForCaptureResp:
+                    var markForCapture = (markForCaptureRespType)clientResponse.Response.Item;
+                    procStatus = markForCapture.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.NewOrderResp:
+                    var newOrder = (newOrderRespType)clientResponse.Response.Item;
+                    procStatus = newOrder.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.ProfileResp:
+                    var profile = (profileRespType)clientResponse.Response.Item;
+                    procStatus = profile.ProfileProcStatus;
+                    break;
+                case (int)ResponeTypeIds.QuickResp:
+                    var quick = (quickRespType)clientResponse.Response.Item;
+                    procStatus = quick.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.QuickResponse:
+                    var quick_old = (quickRespType_old)clientResponse.Response.Item;
+                    procStatus = quick_old.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.ReversalResp:
+                    var reversal = (reversalRespType)clientResponse.Response.Item;
+                    procStatus = reversal.ProcStatus;
+                    break;
+                case (int)ResponeTypeIds.SafetechFraudAnalysisResp:
+                    var safetechFraudAnalysis = (safetechFraudAnalysisRespType)clientResponse.Response.Item;
+                    procStatus = safetechFraudAnalysis.ProcStatus;
+                    break;
+                default:
+                    break;
+            }
+
+            return clientResponse;
         }
 
         public Credentials Credentials()
@@ -202,58 +202,88 @@ namespace PaymentechCore.Services
             return _options?.InterfaceVersion;
         }
 
+        public IPaymentechCache GetCache()
+        {
+            return _cache;
+        }
+
+        public string NewTraceNumber()
+        {
+            var newTrace = Guid.NewGuid().GetHashCode();
+            if (newTrace < 0)
+            {
+                newTrace = newTrace * -1;
+            }
+            var newTraceStr = newTrace.ToString();
+            var maxLength = MaxTraceNumber.ToString().Length;
+            if (newTraceStr.Length > maxLength)
+            {
+                newTraceStr = newTraceStr.Substring(0, maxLength - 1);
+            }
+            return newTraceStr;
+        }
+
         public ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = flexCache };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = inquiry };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = newOrder };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = profile };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = reversal };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
 
         public ClientResponse SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
-            return _sendRequest(_endpoint.Url(), xmlBody, traceNumber);
+            var url = _endpoint.Url();
+            return _sendRequest(url, xmlBody, traceNumber);
         }
     }
 }
