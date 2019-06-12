@@ -64,18 +64,23 @@ namespace PaymentechCore.Services
                 {
                     return _contentToClientResponse(previousResponse, traceNumber, true);
                 }
+                else
+                {
+                    throw new Exception($"Empty previous response for {traceNumber}");
+                }
             }
-            var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
 
-            if (string.IsNullOrEmpty(headers.TraceNumber))
+            if (string.IsNullOrEmpty(traceNumber))
             {
                 var newTrace = Guid.NewGuid().GetHashCode();
                 if (newTrace < 0)
                 {
                     newTrace = newTrace * -1;
                 }
-                headers.TraceNumber = newTrace.ToString();
+                traceNumber = newTrace.ToString();
             }
+
+            var headers = new Headers(traceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
 
             var contentType = headers.ContentType();
             var client = new HttpClient();
@@ -89,7 +94,7 @@ namespace PaymentechCore.Services
             client.DefaultRequestHeaders.Add("Interface-version", headers.InterfaceVersion);
             client.DefaultRequestHeaders.Add("MerchantID", headers.MerchantID);
 
-            string body;
+            string requestBody;
             var requestSerializer = new XmlSerializer(typeof(Request));
             using (var stream = new MemoryStream())
             using (var writer = new StreamWriter(stream))
@@ -101,15 +106,21 @@ namespace PaymentechCore.Services
                 stream.Position = 0;
                 using (var reader = new StreamReader(stream))
                 {
-                    body = reader.ReadToEnd();
+                    requestBody = reader.ReadToEnd();
                 }
+            }
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                throw new Exception("Request body is empty");
             }
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, "");
-            httpRequest.Content = new StringContent(body);
+            httpRequest.Content = new StringContent(requestBody);
             httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             var httpResponse = await client.SendAsync(httpRequest);
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
+
+            _cache.SetValue(traceNumber, httpResponseContent);
 
             if (httpResponse.IsSuccessStatusCode)
             {
@@ -171,10 +182,6 @@ namespace PaymentechCore.Services
                 if (procStatus?.Trim() != "0" && procStatus?.Trim() != "00")
                 {
                     throw new Exception($"Request was unsuccesful - response was {httpResponseContent}");
-                }
-                if (!string.IsNullOrEmpty(traceNumber))
-                {
-                    _cache.SetValue(traceNumber, httpResponseContent);
                 }
 
                 return clientResponse;
