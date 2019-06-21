@@ -8,5 +8,6 @@ namespace PaymentechCore.Models.ResponseModels
         public string TraceNumber { get; set; }
         public bool PreviousRequest { get; set; }
         public string PreviousResponse { get; set; }
+        public string ProcStatus { get; set; }
     }
 }
