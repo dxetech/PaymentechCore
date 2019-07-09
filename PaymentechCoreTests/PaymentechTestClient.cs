@@ -11,14 +11,13 @@ namespace PaymentechCoreTests
     public class PaymentechTestClient : IPaymentechClient
     {
         static long MaxTraceNumber = 9999999999999999;
-        private readonly IPaymentechCache _cache;
-        private readonly PaymentechClientOptions _clientOptions;
-        private readonly IPaymentechClient _client;
+        IPaymentechCache _cache { get; set; }
+        IPaymentechClient _client { get; set; }
 
         public PaymentechTestClient()
         {
             _cache = new MemoryCache();
-            _clientOptions = new PaymentechClientOptions
+            var clientOptions = new PaymentechClientOptions
             {
                 // ENTER IN CREDENTIALS HERE
                 InterfaceVersion = "",
@@ -30,7 +29,7 @@ namespace PaymentechCoreTests
                 },
                 Production = false,
             };
-            var optionsAccessor = Options.Create(_clientOptions);
+            var optionsAccessor = Options.Create(clientOptions);
             var loggerFactory = LoggerFactory.Create(builder => {
                 builder.AddConsole();
             });

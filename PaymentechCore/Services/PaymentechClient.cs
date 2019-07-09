@@ -124,61 +124,42 @@ namespace PaymentechCore.Services
 
         ClientRequest _scrubClientRequest(ClientRequest clientRequest)
         {
-            var scrubbedClientRequest = new ClientRequest
-            {
-                TraceNumber = clientRequest.TraceNumber,
-                PreviousRequest = clientRequest.PreviousRequest,
-            };
+            var scrubbedClientRequest = clientRequest.DeepCopy();
 
-            var request = clientRequest?.Request;
-            if (request?.Item == null)
+            if (scrubbedClientRequest?.Request?.Item == null)
             {
-                scrubbedClientRequest.Request = request;
                 return scrubbedClientRequest;
             }
-            if (request.Item is ProfileType)
+            if (scrubbedClientRequest.Request.Item is ProfileType)
             {
-                var item = request.Item as ProfileType;
+                var item = scrubbedClientRequest.Request.Item as ProfileType;
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
-                request.Item = item;
             }
-
-            scrubbedClientRequest.Request = request;
 
             return scrubbedClientRequest;
         }
 
         ClientResponse _scrubClientResponse(ClientResponse clientResponse)
         {
-            var scrubbedClientResponse = new ClientResponse
+            var scrubbedClientResponse = clientResponse.DeepCopy();
+            if (scrubbedClientResponse?.Response?.Item == null)
             {
-                TraceNumber = clientResponse.TraceNumber,
-                PreviousRequest = clientResponse.PreviousRequest,
-            };
-            var response = clientResponse?.Response;
-            if (response?.Item == null)
-            {
-                scrubbedClientResponse.Response = response;
                 return scrubbedClientResponse;
             }
-            if (response.Item is QuickRespType)
+            if (scrubbedClientResponse.Response.Item is QuickRespType)
             {
-                var item = response.Item as QuickRespType;
+                var item = scrubbedClientResponse.Response.Item as QuickRespType;
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
-                response.Item = item;
             }
-            else if (response.Item is ProfileRespType)
+            else if (scrubbedClientResponse.Response.Item is ProfileRespType)
             {
-                var item = response.Item as ProfileRespType;
+                var item = scrubbedClientResponse.Response.Item as ProfileRespType;
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
-                response.Item = item;
             }
             
-            scrubbedClientResponse.Response = response;
-
             return scrubbedClientResponse;
         }
 
@@ -232,11 +213,6 @@ namespace PaymentechCore.Services
             var scrubbedRequest = _scrubClientRequest(clientRequest);
             var scrubbedRequestContent = _clientRequestToContent(scrubbedRequest);
 
-            if (_logger != null)
-            {
-                _logger.LogInformation($"Request-{clientRequest.TraceNumber}", scrubbedRequestContent);
-            }
-            
             var requestBody = _clientRequestToContent(clientRequest);
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, "");
             httpRequest.Content = new StringContent(requestBody);
@@ -254,10 +230,6 @@ namespace PaymentechCore.Services
             var scrubbedResponse = _scrubClientResponse(clientResponse);
             var scrubbedResponseContent = _clientResponseToContent(scrubbedResponse);
 
-            if (_logger != null)
-            {
-                _logger.LogInformation($"Response-{clientRequest.TraceNumber}", scrubbedResponseContent);
-            }
             if (_cache != null)
             {
                 _cache.SetValue(clientRequest.TraceNumber, scrubbedResponseContent);
@@ -314,6 +286,19 @@ namespace PaymentechCore.Services
                     break;
                 default:
                     break;
+            }
+            if (_logger != null)
+            {
+                if (procStatus != "0")
+                {
+                    _logger.LogWarning($"Request-{clientRequest.TraceNumber}: {scrubbedRequestContent}");
+                    _logger.LogWarning($"Response-{clientRequest.TraceNumber}: {scrubbedResponseContent}");
+                }
+                else
+                {
+                    _logger.LogInformation($"Request-{clientRequest.TraceNumber}: {scrubbedRequestContent}");
+                    _logger.LogInformation($"Response-{clientRequest.TraceNumber}: {scrubbedResponseContent}");
+                }
             }
             clientResponse.ProcStatus = procStatus;
 
