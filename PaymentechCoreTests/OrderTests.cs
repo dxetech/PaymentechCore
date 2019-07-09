@@ -27,7 +27,7 @@ namespace PaymentechCoreTests
             var profile = ProfileTests.SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             var profileResult = _client.Profile(profile);
             Assert.NotNull(profileResult?.Response?.Item);
-            var profileItem = (profileRespType)profileResult.Response.Item;
+            var profileItem = (ProfileRespType)profileResult.Response.Item;
             Assert.Equal("0", profileItem.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(profileItem.CustomerRefNum));
             var customerRefNum = profileItem.CustomerRefNum;
@@ -39,7 +39,7 @@ namespace PaymentechCoreTests
             };
             var orderResult = _client.NewOrder(order);
             Assert.NotNull(orderResult?.Response?.Item);
-            var orderItem = (newOrderRespType)orderResult.Response.Item;
+            var orderItem = (NewOrderRespType)orderResult.Response.Item;
             Assert.Equal("0", orderItem.ProcStatus);
         }
 
@@ -64,7 +64,7 @@ namespace PaymentechCoreTests
 
             var orderResult = _client.NewOrder(order);
             Assert.NotNull(orderResult?.Response?.Item);
-            var orderItem = (newOrderRespType)orderResult.Response.Item;
+            var orderItem = (NewOrderRespType)orderResult.Response.Item;
             Assert.Equal("0", orderItem.ProcStatus);
         }
 
@@ -100,7 +100,7 @@ namespace PaymentechCoreTests
 
             var orderResult = _client.NewOrder(order, traceNumber);
             Assert.NotNull(orderResult?.Response?.Item);
-            var orderItem = (newOrderRespType)orderResult.Response.Item;
+            var orderItem = (NewOrderRespType)orderResult.Response.Item;
             Assert.Equal("0", orderItem.ProcStatus);
 
             previousResponse = cache.GetValue(traceNumber);
@@ -108,7 +108,7 @@ namespace PaymentechCoreTests
 
             var duplicateOrderResult = _client.NewOrder(order, traceNumber);
             Assert.NotNull(orderResult?.Response?.Item);
-            var duplicateOrderItem = (newOrderRespType)duplicateOrderResult.Response.Item;
+            var duplicateOrderItem = (NewOrderRespType)duplicateOrderResult.Response.Item;
             Assert.Equal("0", duplicateOrderItem.ProcStatus);
 
             var duplicatePreviousResponse = cache.GetValue(traceNumber);

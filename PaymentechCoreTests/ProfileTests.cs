@@ -45,7 +45,7 @@ namespace PaymentechCoreTests
             // Profile creation
             var createResult = _client.Profile(createProfile);
             Assert.NotNull(createResult?.Response?.Item);
-            var createData = (profileRespType)createResult.Response.Item;
+            var createData = (ProfileRespType)createResult.Response.Item;
             Assert.Equal("0", createData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(createData.CustomerRefNum));
             Assert.Equal(createProfile.CustomerName.ToUpper(), createData.CustomerName.ToUpper());
@@ -66,7 +66,7 @@ namespace PaymentechCoreTests
             readProfile.CCAccountNum = string.Empty;
             var readResult = _client.Profile(readProfile);
             Assert.NotNull(readResult?.Response?.Item);
-            var readData = (profileRespType)readResult.Response.Item;
+            var readData = (ProfileRespType)readResult.Response.Item;
             Assert.Equal("0", readData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(readData.CustomerRefNum));
             Assert.Equal(readProfile.CustomerName.ToUpper(), readData.CustomerName.ToUpper());
@@ -89,7 +89,7 @@ namespace PaymentechCoreTests
             updateProfile.CustomerZIP = "19130";
             var updateResult = _client.Profile(updateProfile);
             Assert.NotNull(updateResult?.Response?.Item);
-            var updateData = (profileRespType)updateResult.Response.Item;
+            var updateData = (ProfileRespType)updateResult.Response.Item;
             Assert.Equal("0", updateData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(updateData.CustomerRefNum));
             Assert.Equal("Example Customer".ToUpper(), updateData.CustomerName.ToUpper());
@@ -108,7 +108,7 @@ namespace PaymentechCoreTests
             deleteProfile.CCAccountNum = string.Empty;
             var deleteResult = _client.Profile(deleteProfile);
             Assert.NotNull(deleteResult?.Response?.Item);
-            var deleteData = (profileRespType)updateResult.Response.Item;
+            var deleteData = (ProfileRespType)updateResult.Response.Item;
             Assert.Equal("0", deleteData.ProfileProcStatus);
             Assert.Equal(customerRefNum, deleteData.CustomerRefNum);
         }

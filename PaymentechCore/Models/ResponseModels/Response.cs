@@ -28,17 +28,17 @@ namespace PaymentechCore.Models.ResponseModels
         private object itemField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("AccountUpdaterResp", typeof(accountUpdaterRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("EndOfDayResp", typeof(endOfDayRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("FlexCacheResp", typeof(flexCacheRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("InquiryResp", typeof(inquiryRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("MarkForCaptureResp", typeof(markForCaptureRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("NewOrderResp", typeof(newOrderRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("ProfileResp", typeof(profileRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("QuickResp", typeof(quickRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("QuickResponse", typeof(quickRespType_old))]
-        [System.Xml.Serialization.XmlElementAttribute("ReversalResp", typeof(reversalRespType))]
-        [System.Xml.Serialization.XmlElementAttribute("SafetechFraudAnalysisResp", typeof(safetechFraudAnalysisRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("AccountUpdaterResp", typeof(AccountUpdaterRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("EndOfDayResp", typeof(EndOfDayRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("FlexCacheResp", typeof(FlexCacheRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("InquiryResp", typeof(InquiryRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("MarkForCaptureResp", typeof(MarkForCaptureRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("NewOrderResp", typeof(NewOrderRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("ProfileResp", typeof(ProfileRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("QuickResp", typeof(QuickRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("QuickResponse", typeof(QuickRespType_Old))]
+        [System.Xml.Serialization.XmlElementAttribute("ReversalResp", typeof(ReversalRespType))]
+        [System.Xml.Serialization.XmlElementAttribute("SafetechFraudAnalysisResp", typeof(SafetechFraudAnalysisRespType))]
         public object Item {
             get {
                 return this.itemField;
@@ -54,7 +54,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class accountUpdaterRespType {
+    public partial class AccountUpdaterRespType {
         
         private string customerBinField;
         
@@ -170,7 +170,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class safetechFraudAnalysisRespType {
+    public partial class SafetechFraudAnalysisRespType {
         
         private string industryTypeField;
         
@@ -208,7 +208,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string customerProfileMessageField;
         
-        private fraudAnalysisRespType fraudAnalysisResponseField;
+        private FraudAnalysisRespType fraudAnalysisResponseField;
         
         private string eUDDCountryCodeField;
         
@@ -403,7 +403,7 @@ namespace PaymentechCore.Models.ResponseModels
         }
         
         /// <remarks/>
-        public fraudAnalysisRespType FraudAnalysisResponse {
+        public FraudAnalysisRespType FraudAnalysisResponse {
             get {
                 return this.fraudAnalysisResponseField;
             }
@@ -478,7 +478,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class fraudAnalysisRespType {
+    public partial class FraudAnalysisRespType {
         
         private string fraudScoreIndicatorField;
         
@@ -894,7 +894,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class inquiryRespType {
+    public partial class InquiryRespType {
         
         private string industryTypeField;
         
@@ -974,7 +974,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string fraudScoreProcMsgField;
         
-        private fraudAnalysisRespType fraudAnalysisResponseField;
+        private FraudAnalysisRespType fraudAnalysisResponseField;
         
         private string cTIAffluentCardField;
         
@@ -1409,7 +1409,7 @@ namespace PaymentechCore.Models.ResponseModels
         }
         
         /// <remarks/>
-        public fraudAnalysisRespType FraudAnalysisResponse {
+        public FraudAnalysisRespType FraudAnalysisResponse {
             get {
                 return this.fraudAnalysisResponseField;
             }
@@ -1634,7 +1634,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class quickRespType_old {
+    public partial class QuickRespType_Old {
         
         private string merchantIDField;
         
@@ -1662,15 +1662,15 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string customerProfileResponseField;
         
-        private quickRespType_oldHcsTcsInd hcsTcsIndField;
+        private QuickRespType_OldHcsTcsInd hcsTcsIndField;
         
-        private quickRespType_oldMessageType messageTypeField;
+        private QuickRespType_OldMessageType messageTypeField;
         
         private bool messageTypeFieldSpecified;
         
         private string versionField;
         
-        private quickRespType_oldCapStatus capStatusField;
+        private QuickRespType_OldCapStatus capStatusField;
         
         private bool capStatusFieldSpecified;
         
@@ -1678,8 +1678,8 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string tzCodeField;
         
-        public quickRespType_old() {
-            this.hcsTcsIndField = quickRespType_oldHcsTcsInd.T;
+        public QuickRespType_Old() {
+            this.hcsTcsIndField = QuickRespType_OldHcsTcsInd.T;
             this.versionField = "2";
             this.langIndField = "00";
         }
@@ -1816,8 +1816,8 @@ namespace PaymentechCore.Models.ResponseModels
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(quickRespType_oldHcsTcsInd.T)]
-        public quickRespType_oldHcsTcsInd HcsTcsInd {
+        [System.ComponentModel.DefaultValueAttribute(QuickRespType_OldHcsTcsInd.T)]
+        public QuickRespType_OldHcsTcsInd HcsTcsInd {
             get {
                 return this.hcsTcsIndField;
             }
@@ -1828,7 +1828,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public quickRespType_oldMessageType MessageType {
+        public QuickRespType_OldMessageType MessageType {
             get {
                 return this.messageTypeField;
             }
@@ -1861,7 +1861,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public quickRespType_oldCapStatus CapStatus {
+        public QuickRespType_OldCapStatus CapStatus {
             get {
                 return this.capStatusField;
             }
@@ -1945,7 +1945,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public enum quickRespType_oldHcsTcsInd {
+    public enum QuickRespType_OldHcsTcsInd {
         
         /// <remarks/>
         T,
@@ -1958,7 +1958,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public enum quickRespType_oldMessageType {
+    public enum QuickRespType_OldMessageType {
         
         /// <remarks/>
         FR,
@@ -1992,7 +1992,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
-    public enum quickRespType_oldCapStatus {
+    public enum QuickRespType_OldCapStatus {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("0")]
@@ -2032,7 +2032,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class quickRespType {
+    public partial class QuickRespType {
         
         private string merchantIDField;
         
@@ -2484,7 +2484,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class markForCaptureRespType {
+    public partial class MarkForCaptureRespType {
         
         private string merchantIDField;
         
@@ -2732,7 +2732,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class reversalRespType {
+    public partial class ReversalRespType {
         
         private string merchantIDField;
         
@@ -2860,7 +2860,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class endOfDayRespType {
+    public partial class EndOfDayRespType {
         
         private string merchantIDField;
         
@@ -2962,7 +2962,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class profileRespType {
+    public partial class ProfileRespType {
         
         private string customerBinField;
         
@@ -3762,7 +3762,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class newOrderRespType {
+    public partial class NewOrderRespType {
         
         private string industryTypeField;
         
@@ -3842,7 +3842,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string fraudScoreProcMsgField;
         
-        private fraudAnalysisRespType fraudAnalysisResponseField;
+        private FraudAnalysisRespType fraudAnalysisResponseField;
         
         private string cTIAffluentCardField;
         
@@ -4329,7 +4329,7 @@ namespace PaymentechCore.Models.ResponseModels
         }
         
         /// <remarks/>
-        public fraudAnalysisRespType FraudAnalysisResponse {
+        public FraudAnalysisRespType FraudAnalysisResponse {
             get {
                 return this.fraudAnalysisResponseField;
             }
@@ -4814,7 +4814,7 @@ namespace PaymentechCore.Models.ResponseModels
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class flexCacheRespType {
+    public partial class FlexCacheRespType {
         
         private string merchantIDField;
         
@@ -4888,7 +4888,7 @@ namespace PaymentechCore.Models.ResponseModels
         
         private string fraudScoreProcMsgField;
         
-        private fraudAnalysisRespType fraudAnalysisResponseField;
+        private FraudAnalysisRespType fraudAnalysisResponseField;
         
         /// <remarks/>
         public string MerchantID {
@@ -5255,7 +5255,7 @@ namespace PaymentechCore.Models.ResponseModels
         }
         
         /// <remarks/>
-        public fraudAnalysisRespType FraudAnalysisResponse {
+        public FraudAnalysisRespType FraudAnalysisResponse {
             get {
                 return this.fraudAnalysisResponseField;
             }

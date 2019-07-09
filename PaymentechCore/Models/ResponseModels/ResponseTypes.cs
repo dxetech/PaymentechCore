@@ -22,17 +22,17 @@ namespace PaymentechCore.Models.ResponseModels
     {
         public static Dictionary<Type, int> Types = new Dictionary<Type, int>
         {
-            { typeof(accountUpdaterRespType), (int)ResponeTypeIds.AccountUpdaterResp },
-            { typeof(endOfDayRespType), (int)ResponeTypeIds.EndOfDayResp },
-            { typeof(flexCacheRespType), (int)ResponeTypeIds.FlexCacheResp },
-            { typeof(inquiryRespType), (int)ResponeTypeIds.InquiryResp },
-            { typeof(markForCaptureRespType), (int)ResponeTypeIds.MarkForCaptureResp },
-            { typeof(newOrderRespType), (int)ResponeTypeIds.NewOrderResp },
-            { typeof(profileRespType), (int)ResponeTypeIds.ProfileResp },
-            { typeof(quickRespType), (int)ResponeTypeIds.QuickResp },
-            { typeof(quickRespType_old), (int)ResponeTypeIds.QuickResponse },
-            { typeof(reversalRespType), (int)ResponeTypeIds.ReversalResp },
-            { typeof(safetechFraudAnalysisRespType), (int)ResponeTypeIds.SafetechFraudAnalysisResp },
+            { typeof(AccountUpdaterRespType), (int)ResponeTypeIds.AccountUpdaterResp },
+            { typeof(EndOfDayRespType), (int)ResponeTypeIds.EndOfDayResp },
+            { typeof(FlexCacheRespType), (int)ResponeTypeIds.FlexCacheResp },
+            { typeof(InquiryRespType), (int)ResponeTypeIds.InquiryResp },
+            { typeof(MarkForCaptureRespType), (int)ResponeTypeIds.MarkForCaptureResp },
+            { typeof(NewOrderRespType), (int)ResponeTypeIds.NewOrderResp },
+            { typeof(ProfileRespType), (int)ResponeTypeIds.ProfileResp },
+            { typeof(QuickRespType), (int)ResponeTypeIds.QuickResp },
+            { typeof(QuickRespType_Old), (int)ResponeTypeIds.QuickResponse },
+            { typeof(ReversalRespType), (int)ResponeTypeIds.ReversalResp },
+            { typeof(SafetechFraudAnalysisRespType), (int)ResponeTypeIds.SafetechFraudAnalysisResp },
         };
     }
 }
