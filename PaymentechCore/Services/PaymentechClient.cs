@@ -315,6 +315,7 @@ namespace PaymentechCore.Services
                 default:
                     break;
             }
+            clientResponse.ProcStatus = procStatus;
 
             return clientResponse;
         }
@@ -336,11 +337,16 @@ namespace PaymentechCore.Services
 
         public string NewTraceNumber()
         {
+            // use Guid to generate a unique id,
+            // and it's hash code to convert it to numeric format
             var newTrace = Guid.NewGuid().GetHashCode();
+            // make sure that the hash is positive
             if (newTrace < 0)
             {
                 newTrace = newTrace * -1;
             }
+            // if the numeric format is too large,
+            // a substring should be roughly unique enough
             var newTraceStr = newTrace.ToString();
             var maxLength = MaxTraceNumber.ToString().Length;
             if (newTraceStr.Length > maxLength)

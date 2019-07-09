@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
@@ -30,7 +31,11 @@ namespace PaymentechCoreTests
                 Production = false,
             };
             var optionsAccessor = Options.Create(_clientOptions);
-            _client = new PaymentechClient(optionsAccessor, _cache);
+            var loggerFactory = LoggerFactory.Create(builder => {
+                builder.AddConsole();
+            });
+            var logger = loggerFactory.CreateLogger<PaymentechClient>();
+            _client = new PaymentechClient(optionsAccessor, _cache, logger);
         }
 
         public Credentials Credentials()
