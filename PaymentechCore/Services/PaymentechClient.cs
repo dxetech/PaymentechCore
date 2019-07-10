@@ -130,11 +130,33 @@ namespace PaymentechCore.Services
             {
                 return scrubbedClientRequest;
             }
+            if (scrubbedClientRequest.Request.Item is BaseElementsType)
+            {
+                var item = scrubbedClientRequest.Request.Item as BaseElementsType;
+                item.AccountNum = "";
+                item.CAVV = "";
+                item.CardSecVal = "";
+                item.Exp = "";
+            }
             if (scrubbedClientRequest.Request.Item is ProfileType)
             {
                 var item = scrubbedClientRequest.Request.Item as ProfileType;
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
+            }
+            if (scrubbedClientRequest.Request.Item is FlexCacheType)
+            {
+                var item = scrubbedClientRequest.Request.Item as FlexCacheType;
+                item.AccountNum = "";
+                item.CardSecVal = "";
+            }
+            if (scrubbedClientRequest.Request.Item is NewOrderType)
+            {
+                var item = scrubbedClientRequest.Request.Item as NewOrderType;
+                item.AccountNum = "";
+                item.CAVV = "";
+                item.CardSecVal = "";
+                item.Exp = "";
             }
 
             return scrubbedClientRequest;
@@ -147,17 +169,44 @@ namespace PaymentechCore.Services
             {
                 return scrubbedClientResponse;
             }
+            if (scrubbedClientResponse.Response.Item is SafetechFraudAnalysisRespType)
+            {
+                var item = scrubbedClientResponse.Response.Item as SafetechFraudAnalysisRespType;
+                item.AccountNum = "";
+            }
+            if (scrubbedClientResponse.Response.Item is InquiryRespType)
+            {
+                var item = scrubbedClientResponse.Response.Item as InquiryRespType;
+                item.AccountNum = "";
+            }
+            if (scrubbedClientResponse.Response.Item is QuickRespType_Old)
+            {
+                var item = scrubbedClientResponse.Response.Item as QuickRespType_Old;
+                item.AccountNum = "";
+            }
             if (scrubbedClientResponse.Response.Item is QuickRespType)
             {
                 var item = scrubbedClientResponse.Response.Item as QuickRespType;
+                item.AccountNum = "";
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
             }
-            else if (scrubbedClientResponse.Response.Item is ProfileRespType)
+            if (scrubbedClientResponse.Response.Item is ProfileRespType)
             {
                 var item = scrubbedClientResponse.Response.Item as ProfileRespType;
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
+            }
+            if (scrubbedClientResponse.Response.Item is NewOrderRespType)
+            {
+                var item = scrubbedClientResponse.Response.Item as NewOrderRespType;
+                item.AccountNum = "";
+            }
+            if (scrubbedClientResponse.Response.Item is FlexCacheRespType)
+            {
+                var item = scrubbedClientResponse.Response.Item as FlexCacheRespType;
+                // item.Item can be AccountNum, StartAccountNum, ItemElementName
+                item.Item = "";
             }
             
             return scrubbedClientResponse;
