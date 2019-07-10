@@ -343,6 +343,11 @@ namespace PaymentechCore.Services
 
         public ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
         {
+            return UpdateAccountAsync(accountUpdate, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> UpdateAccountAsync(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
+        {
             var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
             var url = _endpoint.Url();
             var request = new ClientRequest
@@ -350,10 +355,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
+        {
+            return EndOfDayAsync(endOfDay, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> EndOfDayAsync(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
             var url = _endpoint.Url();
@@ -362,10 +372,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
+        {
+            return FlexCacheAsync(flexCache, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> FlexCacheAsync(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = flexCache };
             var url = _endpoint.Url();
@@ -374,10 +389,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
+        {
+            return InquiryAsync(inquiry, traceNumber).GetAwaiter().GetResult();
+        }
+        
+        public async Task<ClientResponse> InquiryAsync(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = inquiry };
             var url = _endpoint.Url();
@@ -386,10 +406,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
+        {
+            return MarkForCaptureAsync(markForCapture, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> MarkForCaptureAsync(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
             var url = _endpoint.Url();
@@ -398,10 +423,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
+        {
+            return NewOrderAsync(newOrder, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> NewOrderAsync(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = newOrder };
             var url = _endpoint.Url();
@@ -410,10 +440,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
+        {
+            return ProfileAsync(profile, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> ProfileAsync(Models.RequestModels.ProfileType profile, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = profile };
             var url = _endpoint.Url();
@@ -422,10 +457,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
+        {
+            return ReversalAsync(reversal, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> ReversalAsync(Models.RequestModels.ReversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = reversal };
             var url = _endpoint.Url();
@@ -434,10 +474,15 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
 
         public ClientResponse SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        {
+            return SafetechFraudAnalysisAsync(safetechFraudAnalysis, traceNumber).GetAwaiter().GetResult();
+        }
+
+        public async Task<ClientResponse> SafetechFraudAnalysisAsync(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
             var url = _endpoint.Url();
@@ -446,7 +491,7 @@ namespace PaymentechCore.Services
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return _sendRequest(url, request);
+            return await _sendRequestAsync(url, request);
         }
     }
 }
