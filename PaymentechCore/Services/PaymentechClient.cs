@@ -27,7 +27,7 @@ namespace PaymentechCore.Services
         readonly PaymentechClientOptions _options;
         readonly Endpoint _endpoint;
         readonly IPaymentechCache _cache;
-        readonly ILogger<PaymentechClient> _logger;
+        readonly ILogger _logger;
 
         public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor)
         {
@@ -35,21 +35,17 @@ namespace PaymentechCore.Services
             _endpoint = new Endpoint(_options.Credentials, _options.Production);
         }
 
-        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor,
-            IPaymentechCache cache) : this(optionsAccessor)
+        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor, IPaymentechCache cache) : this(optionsAccessor)
         {
             _cache = cache;
         }
 
-        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor,
-            ILogger<PaymentechClient> logger) : this(optionsAccessor)
+        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor, ILogger<PaymentechClient> logger) : this(optionsAccessor)
         {
             _logger = logger;
         }
 
-        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor,
-            IPaymentechCache cache,
-            ILogger<PaymentechClient> logger) : this(optionsAccessor)
+        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor, IPaymentechCache cache, ILogger<PaymentechClient> logger) : this(optionsAccessor)
         {
             _cache = cache;
             _logger = logger;
