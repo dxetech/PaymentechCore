@@ -1,12 +1,8 @@
-using System;
 using Xunit;
 using PaymentechCore.Services;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
 using PaymentechCore.Models.ResponseModels;
-using Microsoft.Extensions.Options;
-using PaymentechCore;
-using static PaymentechCore.PaymentechConstants;
 
 namespace PaymentechCoreTests
 {
@@ -87,12 +83,6 @@ namespace PaymentechCoreTests
                 MessageType = ValidTransTypes.AC,
             };
 
-            var newTrace = Guid.NewGuid().GetHashCode();
-            if (newTrace < 0)
-            {
-                newTrace = newTrace * -1;
-            }
-            var today = DateTime.Today;
             var traceNumber = _client.NewTraceNumber();
             var cache = _client.GetCache();
             var previousResponse = cache.GetValue(traceNumber);

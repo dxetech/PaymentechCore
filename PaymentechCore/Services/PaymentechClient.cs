@@ -23,7 +23,7 @@ namespace PaymentechCore.Services
 
     public class PaymentechClient : IPaymentechClient
     {
-        static long MaxTraceNumber = 9999999999999999;
+        static readonly long MaxTraceNumber = 9999999999999999;
         readonly PaymentechClientOptions _options;
         readonly Endpoint _endpoint;
         readonly IPaymentechCache _cache;
@@ -51,7 +51,7 @@ namespace PaymentechCore.Services
             _logger = logger;
         }
 
-        string _clientRequestToContent(ClientRequest clientRequest)
+        string ClientRequestToContent(ClientRequest clientRequest)
         {
             var requestBody = "";
             var requestSerializer = new XmlSerializer(typeof(Request));
@@ -63,10 +63,8 @@ namespace PaymentechCore.Services
                 requestSerializer.Serialize(writer, clientRequest.Request, ns);
 
                 stream.Position = 0;
-                using (var reader = new StreamReader(stream))
-                {
-                    requestBody = reader.ReadToEnd();
-                }
+                using var reader = new StreamReader(stream);
+                requestBody = reader.ReadToEnd();
             }
 
             if (string.IsNullOrEmpty(requestBody))
@@ -77,7 +75,7 @@ namespace PaymentechCore.Services
             return requestBody;
         }
 
-        string _clientResponseToContent(ClientResponse clientResponse)
+        string ClientResponseToContent(ClientResponse clientResponse)
         {
             var responseBody = "";
             var responseSerializer = new XmlSerializer(typeof(Response));
@@ -89,10 +87,8 @@ namespace PaymentechCore.Services
                 responseSerializer.Serialize(writer, clientResponse.Response, ns);
 
                 stream.Position = 0;
-                using (var reader = new StreamReader(stream))
-                {
-                    responseBody = reader.ReadToEnd();
-                }
+                using var reader = new StreamReader(stream);
+                responseBody = reader.ReadToEnd();
             }
 
             if (string.IsNullOrEmpty(responseBody))
@@ -103,22 +99,20 @@ namespace PaymentechCore.Services
             return responseBody;
         }
 
-        ClientResponse _contentToClientResponse(string content, string traceNumber, bool previousRequest = false)
+        ClientResponse ContentToClientResponse(string content, string traceNumber, bool previousRequest = false)
         {
             var responseSerializer = new XmlSerializer(typeof(Response));
-            using (var reader = new StringReader(content))
+            using var reader = new StringReader(content);
+            Response response = (Response)responseSerializer.Deserialize(reader);
+            return new ClientResponse
             {
-                Response response = (Response)responseSerializer.Deserialize(reader);
-                return new ClientResponse
-                {
-                    Response = response,
-                    TraceNumber = traceNumber,
-                    PreviousRequest = previousRequest,
-                };
-            }
+                Response = response,
+                TraceNumber = traceNumber,
+                PreviousRequest = previousRequest,
+            };
         }
 
-        ClientRequest _scrubClientRequest(ClientRequest clientRequest)
+        ClientRequest ScrubClientRequest(ClientRequest clientRequest)
         {
             var scrubbedClientRequest = clientRequest.DeepCopy();
 
@@ -158,7 +152,7 @@ namespace PaymentechCore.Services
             return scrubbedClientRequest;
         }
 
-        ClientResponse _scrubClientResponse(ClientResponse clientResponse)
+        ClientResponse ScrubClientResponse(ClientResponse clientResponse)
         {
             var scrubbedClientResponse = clientResponse.DeepCopy();
             if (scrubbedClientResponse?.Response?.Item == null)
@@ -208,12 +202,7 @@ namespace PaymentechCore.Services
             return scrubbedClientResponse;
         }
 
-        ClientResponse _sendRequest(string url, ClientRequest clientRequest)
-        {
-            return _sendRequestAsync(url, clientRequest).GetAwaiter().GetResult();
-        }
-
-        async Task<ClientResponse> _sendRequestAsync(string url, ClientRequest clientRequest)
+        async Task<ClientResponse> SendRequestAsync(string url, ClientRequest clientRequest)
         {
             if (string.IsNullOrEmpty(clientRequest.TraceNumber))
             {
@@ -221,8 +210,7 @@ namespace PaymentechCore.Services
             }
             else
             {
-                long traceNumberVal;
-                if (!Int64.TryParse(clientRequest.TraceNumber, out traceNumberVal))
+                if (!long.TryParse(clientRequest.TraceNumber, out long traceNumberVal))
                 {
                     throw new Exception("Trace number must convert to int64");
                 }
@@ -235,7 +223,7 @@ namespace PaymentechCore.Services
                     var previousResponseContent = _cache.GetValue(clientRequest.TraceNumber);
                     if (!string.IsNullOrEmpty(previousResponseContent))
                     {
-                        var previousClientResponse = _contentToClientResponse(previousResponseContent, clientRequest.TraceNumber, true);
+                        var previousClientResponse = ContentToClientResponse(previousResponseContent, clientRequest.TraceNumber, true);
                         return previousClientResponse;
                     }
                 }
@@ -244,8 +232,10 @@ namespace PaymentechCore.Services
             var headers = new Headers(clientRequest.TraceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
 
             var contentType = headers.ContentType();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(url);
+            using var client = new HttpClient
+            {
+                BaseAddress = new Uri(url)
+            };
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("MIME-Version", headers.MIME_Version);
             client.DefaultRequestHeaders.Add("Content-transfer-encoding", headers.ContentTransferEncoding);
@@ -255,14 +245,17 @@ namespace PaymentechCore.Services
             client.DefaultRequestHeaders.Add("Interface-version", headers.InterfaceVersion);
             client.DefaultRequestHeaders.Add("MerchantID", headers.MerchantID);
 
-            var scrubbedRequest = _scrubClientRequest(clientRequest);
-            var scrubbedRequestContent = _clientRequestToContent(scrubbedRequest);
+            var scrubbedRequest = ScrubClientRequest(clientRequest);
+            var scrubbedRequestContent = ClientRequestToContent(scrubbedRequest);
 
-            var requestBody = _clientRequestToContent(clientRequest);
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, "");
-            httpRequest.Content = new StringContent(requestBody);
+            var requestBody = ClientRequestToContent(clientRequest);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, "")
+            {
+                Content = new StringContent(requestBody)
+            };
             httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             var httpResponse = await client.SendAsync(httpRequest);
+
             var httpResponseContent = await httpResponse.Content.ReadAsStringAsync();
 
             if (string.IsNullOrEmpty(httpResponseContent))
@@ -270,10 +263,10 @@ namespace PaymentechCore.Services
                 throw new Exception("Response content is empty");
             }
 
-            var clientResponse = _contentToClientResponse(httpResponseContent, clientRequest.TraceNumber);
+            var clientResponse = ContentToClientResponse(httpResponseContent, clientRequest.TraceNumber);
 
-            var scrubbedResponse = _scrubClientResponse(clientResponse);
-            var scrubbedResponseContent = _clientResponseToContent(scrubbedResponse);
+            var scrubbedResponse = ScrubClientResponse(clientResponse);
+            var scrubbedResponseContent = ClientResponseToContent(scrubbedResponse);
 
             if (_cache != null)
             {
@@ -373,7 +366,7 @@ namespace PaymentechCore.Services
             // make sure that the hash is positive
             if (newTrace < 0)
             {
-                newTrace = newTrace * -1;
+                newTrace *= -1;
             }
             // if the numeric format is too large,
             // a substring should be roughly unique enough
@@ -386,157 +379,157 @@ namespace PaymentechCore.Services
             return newTraceStr;
         }
 
-        public ClientResponse UpdateAccount(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             return UpdateAccountAsync(accountUpdate, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> UpdateAccountAsync(Models.RequestModels.AccountUpdaterType accountUpdate, string traceNumber = null)
+        public async Task<ClientResponse> UpdateAccountAsync(AccountUpdaterType accountUpdate, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = accountUpdate };
+            var xmlBody = new Request { Item = accountUpdate };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse EndOfDay(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null)
         {
             return EndOfDayAsync(endOfDay, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> EndOfDayAsync(Models.RequestModels.EndOfDayType endOfDay, string traceNumber = null)
+        public async Task<ClientResponse> EndOfDayAsync(EndOfDayType endOfDay, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = endOfDay };
+            var xmlBody = new Request { Item = endOfDay };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse FlexCache(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
+        public ClientResponse FlexCache(FlexCacheType flexCache, string traceNumber = null)
         {
             return FlexCacheAsync(flexCache, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> FlexCacheAsync(Models.RequestModels.FlexCacheType flexCache, string traceNumber = null)
+        public async Task<ClientResponse> FlexCacheAsync(FlexCacheType flexCache, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = flexCache };
+            var xmlBody = new Request { Item = flexCache };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Inquiry(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
+        public ClientResponse Inquiry(InquiryType inquiry, string traceNumber = null)
         {
             return InquiryAsync(inquiry, traceNumber).GetAwaiter().GetResult();
         }
         
-        public async Task<ClientResponse> InquiryAsync(Models.RequestModels.InquiryType inquiry, string traceNumber = null)
+        public async Task<ClientResponse> InquiryAsync(InquiryType inquiry, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = inquiry };
+            var xmlBody = new Request { Item = inquiry };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse MarkForCapture(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse MarkForCapture(MarkForCaptureType markForCapture, string traceNumber = null)
         {
             return MarkForCaptureAsync(markForCapture, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> MarkForCaptureAsync(Models.RequestModels.MarkForCaptureType markForCapture, string traceNumber = null)
+        public async Task<ClientResponse> MarkForCaptureAsync(MarkForCaptureType markForCapture, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = markForCapture };
+            var xmlBody = new Request { Item = markForCapture };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse NewOrder(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
+        public ClientResponse NewOrder(NewOrderType newOrder, string traceNumber = null)
         {
             return NewOrderAsync(newOrder, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> NewOrderAsync(Models.RequestModels.NewOrderType newOrder, string traceNumber = null)
+        public async Task<ClientResponse> NewOrderAsync(NewOrderType newOrder, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = newOrder };
+            var xmlBody = new Request { Item = newOrder };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Profile(Models.RequestModels.ProfileType profile, string traceNumber = null)
+        public ClientResponse Profile(ProfileType profile, string traceNumber = null)
         {
             return ProfileAsync(profile, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ProfileAsync(Models.RequestModels.ProfileType profile, string traceNumber = null)
+        public async Task<ClientResponse> ProfileAsync(ProfileType profile, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = profile };
+            var xmlBody = new Request { Item = profile };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Reversal(Models.RequestModels.ReversalType reversal, string traceNumber = null)
+        public ClientResponse Reversal(ReversalType reversal, string traceNumber = null)
         {
             return ReversalAsync(reversal, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ReversalAsync(Models.RequestModels.ReversalType reversal, string traceNumber = null)
+        public async Task<ClientResponse> ReversalAsync(ReversalType reversal, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = reversal };
+            var xmlBody = new Request { Item = reversal };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse SafetechFraudAnalysis(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse SafetechFraudAnalysis(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             return SafetechFraudAnalysisAsync(safetechFraudAnalysis, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> SafetechFraudAnalysisAsync(Models.RequestModels.SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public async Task<ClientResponse> SafetechFraudAnalysisAsync(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
-            var xmlBody = new Models.RequestModels.Request { Item = safetechFraudAnalysis };
+            var xmlBody = new Request { Item = safetechFraudAnalysis };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
                 TraceNumber = traceNumber,
             };
-            return await _sendRequestAsync(url, request);
+            return await SendRequestAsync(url, request);
         }
     }
 }

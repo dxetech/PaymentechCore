@@ -11,9 +11,9 @@ namespace PaymentechCoreTests
 {
     public class PaymentechTestClient : IPaymentechClient
     {
-        static long MaxTraceNumber = 9999999999999999;
-        IPaymentechCache _cache { get; set; }
-        IPaymentechClient _client { get; set; }
+        static readonly long MaxTraceNumber = 9999999999999999;
+        readonly IPaymentechCache _cache;
+        readonly IPaymentechClient _client;
 
         public PaymentechTestClient()
         {
@@ -58,7 +58,7 @@ namespace PaymentechCoreTests
             var newTrace = Guid.NewGuid().GetHashCode();
             if (newTrace < 0)
             {
-                newTrace = newTrace * -1;
+                newTrace *= -1;
             }
             var newTraceStr = newTrace.ToString();
             var maxLength = MaxTraceNumber.ToString().Length;
