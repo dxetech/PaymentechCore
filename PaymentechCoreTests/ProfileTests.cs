@@ -32,7 +32,7 @@ namespace PaymentechCoreTests
             profile.CustomerEmail = "test@example.com";
             profile.CustomerPhone = "9089089080";
             profile.CCAccountNum = "4788250000028291";
-            profile.CCExpireDate = "1120";
+            profile.CCExpireDate = "1124";
 
             return profile;
         }

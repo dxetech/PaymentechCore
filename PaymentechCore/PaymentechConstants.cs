@@ -34,7 +34,7 @@ namespace PaymentechCore
         public const string TEST_ENDPOINT_URL_2 = "https://orbitalvar2.chasepaymentech.com";
         public const string ENDPOINT_URL_1 = "https://orbital1.chasepaymentech.com";
         public const string ENDPOINT_URL_2 = "https://orbital2.chasepaymentech.com";
-        public const string CURRENT_DTD_VERSION = "PTI68";
+        public const string CURRENT_DTD_VERSION = "PTI80";
         public static Dictionary<string, string> AUTH_PLATFORM_BIN = new Dictionary<string, string>
         {
             { "salem", "000001" },

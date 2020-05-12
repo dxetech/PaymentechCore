@@ -54,7 +54,7 @@ namespace PaymentechCoreTests
                 CustomerEmail = "test@example.com",
                 AVSphoneNum = "9089089080",
                 AccountNum = "4788250000028291",
-                Exp = "1120",
+                Exp = "1124",
                 MessageType = ValidTransTypes.AC,
             };
 
@@ -79,7 +79,7 @@ namespace PaymentechCoreTests
                 CustomerEmail = "test@example.com",
                 AVSphoneNum = "9089089080",
                 AccountNum = "4788250000028291",
-                Exp = "1120",
+                Exp = "1124",
                 MessageType = ValidTransTypes.AC,
             };
 
