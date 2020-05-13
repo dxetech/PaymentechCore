@@ -10,7 +10,7 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string merchantID,
-            ValidRoutingBins bin = ValidRoutingBins.Item000002,
+            Valid_Routing_Bins bin = Valid_Routing_Bins.Item000002,
             string terminalId = "001") : base()
         {
             OrbitalConnectionUsername = orbitalConnectionUsername;

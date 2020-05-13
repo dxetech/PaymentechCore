@@ -10,7 +10,7 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string customerMerchantID,
-            ValidRoutingBins customerBin = ValidRoutingBins.Item000002) : base()
+            Valid_Routing_Bins customerBin = Valid_Routing_Bins.Item000002) : base()
         {
             OrbitalConnectionUsername = orbitalConnectionUsername;
             OrbitalConnectionPassword = orbitalConnectionPassword;
@@ -22,7 +22,7 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string customerMerchantID,
-            ValidRoutingBins customerBin = ValidRoutingBins.Item000002,
+            Valid_Routing_Bins customerBin = Valid_Routing_Bins.Item000002,
             string customerCountryCode = "US",
             string customerProfileOrderOverrideInd = "NO",
             string customerProfileFromOrderInd = "A",
@@ -30,7 +30,7 @@ namespace PaymentechCore.Models.RequestModels
             string status = "A")
         {
             var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = ProfileActionTypes.C;
+            profile.CustomerProfileAction = Profile_Action_Types.C;
 
             profile.CustomerCountryCode = customerCountryCode;
             profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
@@ -45,10 +45,10 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string customerMerchantID,
-            ValidRoutingBins customerBin = ValidRoutingBins.Item000002)
+            Valid_Routing_Bins customerBin = Valid_Routing_Bins.Item000002)
         {
             var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = ProfileActionTypes.R;
+            profile.CustomerProfileAction = Profile_Action_Types.R;
 
             return profile;
         }
@@ -57,7 +57,7 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string customerMerchantID,
-            ValidRoutingBins customerBin = ValidRoutingBins.Item000002,
+            Valid_Routing_Bins customerBin = Valid_Routing_Bins.Item000002,
             string customerCountryCode = "US",
             string customerProfileOrderOverrideInd = "NO",
             string customerProfileFromOrderInd = "A",
@@ -65,7 +65,7 @@ namespace PaymentechCore.Models.RequestModels
             string status = "A")
         {
             var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = ProfileActionTypes.U;
+            profile.CustomerProfileAction = Profile_Action_Types.U;
 
             profile.CustomerCountryCode = customerCountryCode;
             profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
@@ -80,10 +80,10 @@ namespace PaymentechCore.Models.RequestModels
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string customerMerchantID,
-            ValidRoutingBins customerBin = ValidRoutingBins.Item000002)
+            Valid_Routing_Bins customerBin = Valid_Routing_Bins.Item000002)
         {
             var profile = new ProfileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = ProfileActionTypes.D;
+            profile.CustomerProfileAction = Profile_Action_Types.D;
 
             return profile;
         }

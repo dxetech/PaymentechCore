@@ -116,11 +116,11 @@ namespace PaymentechCore.Services
         {
             var scrubbedClientRequest = clientRequest.DeepCopy();
 
-            if (scrubbedClientRequest?.Request?.Item == null)
+            if (scrubbedClientRequest?.Request?. == null)
             {
                 return scrubbedClientRequest;
             }
-            if (scrubbedClientRequest.Request.Item is BaseElementsType)
+            if (scrubbedClientRequest.Request. is BaseElementsType)
             {
                 var item = scrubbedClientRequest.Request.Item as BaseElementsType;
                 item.AccountNum = "";
@@ -128,11 +128,12 @@ namespace PaymentechCore.Services
                 item.CardSecVal = "";
                 item.Exp = "";
             }
-            if (scrubbedClientRequest.Request.Item is ProfileType)
+            if (scrubbedClientRequest.Request.Profile != null)
             {
-                var item = scrubbedClientRequest.Request.Item as ProfileType;
-                item.CCAccountNum = "";
-                item.CCExpireDate = "";
+                scrubbedClientRequest.Request.Profile.Num = "";
+                scrubbedClientRequest.Request.Profile.AccountNum = "";
+                scrubbedClientRequest.Request.Profile.CCAccountNum = "";
+                scrubbedClientRequest.Request.Profile.CCExpireDate = "";
             }
             if (scrubbedClientRequest.Request.Item is FlexCacheType)
             {
