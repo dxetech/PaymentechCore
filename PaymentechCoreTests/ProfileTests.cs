@@ -21,7 +21,7 @@ namespace PaymentechCoreTests
             _credentials = _client.Credentials();
         }
 
-        public static ProfileType SetProfileDefaults(ProfileType profile)
+        public static profileType SetProfileDefaults(profileType profile)
         {
             profile.CustomerName = "Test User";
             profile.CustomerAddress1 = "101 Main St.";
@@ -40,12 +40,12 @@ namespace PaymentechCoreTests
         [Fact]
         public void ProfileLifecycle()
         {
-            var createProfile = SetProfileDefaults(ProfileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var createProfile = SetProfileDefaults(profileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
 
             // Profile creation
             var createResult = _client.Profile(createProfile);
             Assert.NotNull(createResult?.Response?.Item);
-            var createData = (ProfileRespType)createResult.Response.Item;
+            var createData = (profileRespType)createResult.Response.Item;
             Assert.Equal("0", createData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(createData.CustomerRefNum));
             Assert.Equal(createProfile.CustomerName.ToUpper(), createData.CustomerName.ToUpper());
@@ -61,12 +61,12 @@ namespace PaymentechCoreTests
             var customerRefNum = createData.CustomerRefNum;
 
             // Profile reading
-            var readProfile = SetProfileDefaults(ProfileType.ReadProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var readProfile = SetProfileDefaults(profileType.ReadProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             readProfile.CustomerRefNum = customerRefNum;
             readProfile.CCAccountNum = string.Empty;
             var readResult = _client.Profile(readProfile);
             Assert.NotNull(readResult?.Response?.Item);
-            var readData = (ProfileRespType)readResult.Response.Item;
+            var readData = (profileRespType)readResult.Response.Item;
             Assert.Equal("0", readData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(readData.CustomerRefNum));
             Assert.Equal(readProfile.CustomerName.ToUpper(), readData.CustomerName.ToUpper());
@@ -80,7 +80,7 @@ namespace PaymentechCoreTests
             Assert.Equal(readProfile.CCExpireDate.ToUpper(), readData.CCExpireDate.ToUpper());
 
             // Profile updating
-            var updateProfile = SetProfileDefaults(ProfileType.UpdateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var updateProfile = SetProfileDefaults(profileType.UpdateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             updateProfile.CustomerRefNum = customerRefNum;
             updateProfile.CCAccountNum = string.Empty;
             updateProfile.CustomerName = "Example Customer";
@@ -89,7 +89,7 @@ namespace PaymentechCoreTests
             updateProfile.CustomerZIP = "19130";
             var updateResult = _client.Profile(updateProfile);
             Assert.NotNull(updateResult?.Response?.Item);
-            var updateData = (ProfileRespType)updateResult.Response.Item;
+            var updateData = (profileRespType)updateResult.Response.Item;
             Assert.Equal("0", updateData.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(updateData.CustomerRefNum));
             Assert.Equal("Example Customer".ToUpper(), updateData.CustomerName.ToUpper());
@@ -103,12 +103,12 @@ namespace PaymentechCoreTests
             Assert.Equal(updateProfile.CCExpireDate.ToUpper(), updateData.CCExpireDate.ToUpper());
 
             // Profile deletion
-            var deleteProfile = SetProfileDefaults(ProfileType.DestroyProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var deleteProfile = SetProfileDefaults(profileType.DestroyProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             deleteProfile.CustomerRefNum = customerRefNum;
             deleteProfile.CCAccountNum = string.Empty;
             var deleteResult = _client.Profile(deleteProfile);
             Assert.NotNull(deleteResult?.Response?.Item);
-            var deleteData = (ProfileRespType)updateResult.Response.Item;
+            var deleteData = (profileRespType)updateResult.Response.Item;
             Assert.Equal("0", deleteData.ProfileProcStatus);
             Assert.Equal(customerRefNum, deleteData.CustomerRefNum);
         }

@@ -69,92 +69,92 @@ namespace PaymentechCoreTests
             return newTraceStr;
         }
 
-        public ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse UpdateAccount(accountUpdaterType accountUpdate, string traceNumber = null)
         {
             return _client.UpdateAccount(accountUpdate, traceNumber);
         }
 
-        public async Task<ClientResponse> UpdateAccountAsync(AccountUpdaterType accountUpdate, string traceNumber = null)
+        public async Task<ClientResponse> UpdateAccountAsync(accountUpdaterType accountUpdate, string traceNumber = null)
         {
             return await _client.UpdateAccountAsync(accountUpdate, traceNumber);
         }
 
-        public ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse EndOfDay(endOfDayType endOfDay, string traceNumber = null)
         {
             return _client.EndOfDay(endOfDay, traceNumber);
         }
 
-        public async Task<ClientResponse> EndOfDayAsync(EndOfDayType endOfDay, string traceNumber = null)
+        public async Task<ClientResponse> EndOfDayAsync(endOfDayType endOfDay, string traceNumber = null)
         {
             return await _client.EndOfDayAsync(endOfDay, traceNumber);
         }
 
-        public ClientResponse FlexCache(FlexCacheType flexCache, string traceNumber = null)
+        public ClientResponse FlexCache(flexCacheType flexCache, string traceNumber = null)
         {
             return _client.FlexCache(flexCache, traceNumber);
         }
 
-        public async Task<ClientResponse> FlexCacheAsync(FlexCacheType flexCache, string traceNumber = null)
+        public async Task<ClientResponse> FlexCacheAsync(flexCacheType flexCache, string traceNumber = null)
         {
             return await _client.FlexCacheAsync(flexCache, traceNumber);
         }
 
-        public ClientResponse Inquiry(InquiryType inquiry, string traceNumber = null)
+        public ClientResponse Inquiry(inquiryType inquiry, string traceNumber = null)
         {
             return _client.Inquiry(inquiry, traceNumber);
         }
 
-        public async Task<ClientResponse> InquiryAsync(InquiryType inquiry, string traceNumber = null)
+        public async Task<ClientResponse> InquiryAsync(inquiryType inquiry, string traceNumber = null)
         {
             return await _client.InquiryAsync(inquiry, traceNumber);
         }
 
-        public ClientResponse MarkForCapture(MarkForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse MarkForCapture(markForCaptureType markForCapture, string traceNumber = null)
         {
             return _client.MarkForCapture(markForCapture, traceNumber);
         }
 
-        public async Task<ClientResponse> MarkForCaptureAsync(MarkForCaptureType markForCapture, string traceNumber = null)
+        public async Task<ClientResponse> MarkForCaptureAsync(markForCaptureType markForCapture, string traceNumber = null)
         {
             return await _client.MarkForCaptureAsync(markForCapture, traceNumber);
         }
 
-        public ClientResponse NewOrder(NewOrderType newOrder, string traceNumber = null)
+        public ClientResponse NewOrder(newOrderType newOrder, string traceNumber = null)
         {
             return _client.NewOrder(newOrder, traceNumber);
         }
 
-        public async Task<ClientResponse> NewOrderAsync(NewOrderType newOrder, string traceNumber = null)
+        public async Task<ClientResponse> NewOrderAsync(newOrderType newOrder, string traceNumber = null)
         {
             return await _client.NewOrderAsync(newOrder, traceNumber);
         }
 
-        public ClientResponse Profile(ProfileType profile, string traceNumber = null)
+        public ClientResponse Profile(profileType profile, string traceNumber = null)
         {
             return _client.Profile(profile, traceNumber);
         }
 
-        public async Task<ClientResponse> ProfileAsync(ProfileType profile, string traceNumber = null)
+        public async Task<ClientResponse> ProfileAsync(profileType profile, string traceNumber = null)
         {
             return await _client.ProfileAsync(profile, traceNumber);
         }
 
-        public ClientResponse Reversal(ReversalType reversal, string traceNumber = null)
+        public ClientResponse Reversal(reversalType reversal, string traceNumber = null)
         {
             return _client.Reversal(reversal, traceNumber);
         }
 
-        public async Task<ClientResponse> ReversalAsync(ReversalType reversal, string traceNumber = null)
+        public async Task<ClientResponse> ReversalAsync(reversalType reversal, string traceNumber = null)
         {
             return await _client.ReversalAsync(reversal, traceNumber);
         }
 
-        public ClientResponse SafetechFraudAnalysis(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse SafetechFraudAnalysis(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             return _client.SafetechFraudAnalysis(safetechFraudAnalysis, traceNumber);
         }
 
-        public async Task<ClientResponse> SafetechFraudAnalysisAsync(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public async Task<ClientResponse> SafetechFraudAnalysisAsync(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             return await _client.SafetechFraudAnalysisAsync(safetechFraudAnalysis, traceNumber);
         }

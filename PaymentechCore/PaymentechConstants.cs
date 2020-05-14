@@ -7,7 +7,7 @@ namespace PaymentechCore
 {
     public class PaymentechConstants
     {
-        public enum PaymentechProfile_Action_Types
+        public enum Paymentechprofileactiontypes
         {
             Create,
             Read,
@@ -40,12 +40,12 @@ namespace PaymentechCore
             { "salem", "000001" },
             { "pns", "000002" },
         };
-        public static Dictionary<PaymentechProfile_Action_Types, Profile_Action_Types> PaymentechProfileActions = new Dictionary<PaymentechProfile_Action_Types, Profile_Action_Types>
+        public static Dictionary<Paymentechprofileactiontypes, profileactiontypes> PaymentechProfileActions = new Dictionary<Paymentechprofileactiontypes, profileactiontypes>
         {
-            { PaymentechProfile_Action_Types.Create, Profile_Action_Types.C },
-            { PaymentechProfile_Action_Types.Read, Profile_Action_Types.R },
-            { PaymentechProfile_Action_Types.Update, Profile_Action_Types.U },
-            { PaymentechProfile_Action_Types.Destroy, Profile_Action_Types.D },
+            { Paymentechprofileactiontypes.Create, profileactiontypes.C },
+            { Paymentechprofileactiontypes.Read, profileactiontypes.R },
+            { Paymentechprofileactiontypes.Update, profileactiontypes.U },
+            { Paymentechprofileactiontypes.Destroy, profileactiontypes.D },
         };
     }
 }

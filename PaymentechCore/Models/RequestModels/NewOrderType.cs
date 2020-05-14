@@ -2,17 +2,17 @@ using System;
 
 namespace PaymentechCore.Models.RequestModels
 {
-    public partial class NewOrderType
+    public partial class newOrderType
     {
-        public NewOrderType() { }
+        public newOrderType() { }
 
-        public NewOrderType(
+        public newOrderType(
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string merchantID,
-            Valid_Routing_Bins bin = Valid_Routing_Bins.Item000002,
-            Valid_Industry_Types industryType = Valid_Industry_Types.EC,
-            Valid_Trans_Types messageType = Valid_Trans_Types.AC,
+            validroutingbins bin = validroutingbins.Item000002,
+            validindustrytypes industryType = validindustrytypes.EC,
+            validtranstypes messageType = validtranstypes.AC,
             string terminalId = "001",
             string currencyCode = "840",
             string currencyEndpoint = "2") : base()

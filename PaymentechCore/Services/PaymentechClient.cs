@@ -116,34 +116,44 @@ namespace PaymentechCore.Services
         {
             var scrubbedClientRequest = clientRequest.DeepCopy();
 
-            if (scrubbedClientRequest?.Request?. == null)
+            if (scrubbedClientRequest?.Request?.Item == null)
             {
                 return scrubbedClientRequest;
             }
-            if (scrubbedClientRequest.Request. is BaseElementsType)
+            if (scrubbedClientRequest.Request.Item is baseElementsType)
             {
-                var item = scrubbedClientRequest.Request.Item as BaseElementsType;
+                var item = scrubbedClientRequest.Request.Item as baseElementsType;
                 item.AccountNum = "";
                 item.CAVV = "";
                 item.CardSecVal = "";
                 item.Exp = "";
             }
-            if (scrubbedClientRequest.Request.Profile != null)
+            if (scrubbedClientRequest.Request.Item is profileType)
             {
-                scrubbedClientRequest.Request.Profile.Num = "";
-                scrubbedClientRequest.Request.Profile.AccountNum = "";
-                scrubbedClientRequest.Request.Profile.CCAccountNum = "";
-                scrubbedClientRequest.Request.Profile.CCExpireDate = "";
+                var item = scrubbedClientRequest.Request.Item as profileType;
+                item.CardBrand = "";
+                item.CCAccountNum = "";
+                item.CCExpireDate = "";
+                item.CustomerAccountType = "";
+                item.CustomerAddress1 = "";
+                item.CustomerAddress2 = "";
+                item.CustomerCity = "";
+                item.CustomerCountryCode = "";
+                item.CustomerEmail = "";
+                item.CustomerName = "";
+                item.CustomerPhone = "";
+                item.CustomerState = "";
+                item.CustomerZIP = "";
             }
-            if (scrubbedClientRequest.Request.Item is FlexCacheType)
+            if (scrubbedClientRequest.Request.Item is flexCacheType)
             {
-                var item = scrubbedClientRequest.Request.Item as FlexCacheType;
+                var item = scrubbedClientRequest.Request.Item as flexCacheType;
                 item.AccountNum = "";
                 item.CardSecVal = "";
             }
-            if (scrubbedClientRequest.Request.Item is NewOrderType)
+            if (scrubbedClientRequest.Request.Item is newOrderType)
             {
-                var item = scrubbedClientRequest.Request.Item as NewOrderType;
+                var item = scrubbedClientRequest.Request.Item as newOrderType;
                 item.AccountNum = "";
                 item.CAVV = "";
                 item.CardSecVal = "";
@@ -160,42 +170,53 @@ namespace PaymentechCore.Services
             {
                 return scrubbedClientResponse;
             }
-            if (scrubbedClientResponse.Response.Item is SafetechFraudAnalysisRespType)
+            if (scrubbedClientResponse.Response.Item is safetechFraudAnalysisRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as SafetechFraudAnalysisRespType;
+                var item = scrubbedClientResponse.Response.Item as safetechFraudAnalysisRespType;
                 item.AccountNum = "";
             }
-            if (scrubbedClientResponse.Response.Item is InquiryRespType)
+            if (scrubbedClientResponse.Response.Item is inquiryRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as InquiryRespType;
+                var item = scrubbedClientResponse.Response.Item as inquiryRespType;
                 item.AccountNum = "";
             }
-            if (scrubbedClientResponse.Response.Item is QuickRespType_Old)
+            if (scrubbedClientResponse.Response.Item is quickRespType_old)
             {
-                var item = scrubbedClientResponse.Response.Item as QuickRespType_Old;
+                var item = scrubbedClientResponse.Response.Item as quickRespType_old;
                 item.AccountNum = "";
             }
-            if (scrubbedClientResponse.Response.Item is QuickRespType)
+            if (scrubbedClientResponse.Response.Item is quickRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as QuickRespType;
+                var item = scrubbedClientResponse.Response.Item as quickRespType;
                 item.AccountNum = "";
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
             }
-            if (scrubbedClientResponse.Response.Item is ProfileRespType)
+            if (scrubbedClientResponse.Response.Item is profileRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as ProfileRespType;
+                var item = scrubbedClientResponse.Response.Item as profileRespType;
+                item.CardBrand = "";
                 item.CCAccountNum = "";
                 item.CCExpireDate = "";
+                item.CustomerAccountType = "";
+                item.CustomerAddress1 = "";
+                item.CustomerAddress2 = "";
+                item.CustomerCity = "";
+                item.CustomerCountryCode = "";
+                item.CustomerEmail = "";
+                item.CustomerName = "";
+                item.CustomerPhone = "";
+                item.CustomerState = "";
+                item.CustomerZIP = "";
             }
-            if (scrubbedClientResponse.Response.Item is NewOrderRespType)
+            if (scrubbedClientResponse.Response.Item is newOrderRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as NewOrderRespType;
+                var item = scrubbedClientResponse.Response.Item as newOrderRespType;
                 item.AccountNum = "";
             }
-            if (scrubbedClientResponse.Response.Item is FlexCacheRespType)
+            if (scrubbedClientResponse.Response.Item is flexCacheRespType)
             {
-                var item = scrubbedClientResponse.Response.Item as FlexCacheRespType;
+                var item = scrubbedClientResponse.Response.Item as flexCacheRespType;
                 // item.Item can be AccountNum, StartAccountNum, ItemElementName
                 item.Item = "";
             }
@@ -280,47 +301,47 @@ namespace PaymentechCore.Services
             switch (itemType)
             {
                 case (int)ResponeTypeIds.AccountUpdaterResp:
-                    var accountUpdater = (AccountUpdaterRespType)clientResponse.Response.Item;
+                    var accountUpdater = (accountUpdaterRespType)clientResponse.Response.Item;
                     procStatus = accountUpdater.ProfileProcStatus;
                     break;
                 case (int)ResponeTypeIds.EndOfDayResp:
-                    var endOfDay = (EndOfDayRespType)clientResponse.Response.Item;
+                    var endOfDay = (endOfDayRespType)clientResponse.Response.Item;
                     procStatus = endOfDay.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.FlexCacheResp:
-                    var flexCache = (FlexCacheRespType)clientResponse.Response.Item;
+                    var flexCache = (flexCacheRespType)clientResponse.Response.Item;
                     procStatus = flexCache.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.InquiryResp:
-                    var inquiry = (InquiryRespType)clientResponse.Response.Item;
+                    var inquiry = (inquiryRespType)clientResponse.Response.Item;
                     procStatus = inquiry.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.MarkForCaptureResp:
-                    var markForCapture = (MarkForCaptureRespType)clientResponse.Response.Item;
+                    var markForCapture = (markForCaptureRespType)clientResponse.Response.Item;
                     procStatus = markForCapture.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.NewOrderResp:
-                    var newOrder = (NewOrderRespType)clientResponse.Response.Item;
+                    var newOrder = (newOrderRespType)clientResponse.Response.Item;
                     procStatus = newOrder.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.ProfileResp:
-                    var profile = (ProfileRespType)clientResponse.Response.Item;
+                    var profile = (profileRespType)clientResponse.Response.Item;
                     procStatus = profile.ProfileProcStatus;
                     break;
                 case (int)ResponeTypeIds.QuickResp:
-                    var quick = (QuickRespType)clientResponse.Response.Item;
+                    var quick = (quickRespType)clientResponse.Response.Item;
                     procStatus = quick.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.QuickResponse:
-                    var quick_old = (QuickRespType_Old)clientResponse.Response.Item;
+                    var quick_old = (quickRespType_old)clientResponse.Response.Item;
                     procStatus = quick_old.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.ReversalResp:
-                    var reversal = (ReversalRespType)clientResponse.Response.Item;
+                    var reversal = (reversalRespType)clientResponse.Response.Item;
                     procStatus = reversal.ProcStatus;
                     break;
                 case (int)ResponeTypeIds.SafetechFraudAnalysisResp:
-                    var safetechFraudAnalysis = (SafetechFraudAnalysisRespType)clientResponse.Response.Item;
+                    var safetechFraudAnalysis = (safetechFraudAnalysisRespType)clientResponse.Response.Item;
                     procStatus = safetechFraudAnalysis.ProcStatus;
                     break;
                 default:
@@ -330,13 +351,13 @@ namespace PaymentechCore.Services
             {
                 if (procStatus != "0")
                 {
-                    _logger.LogWarning($"Request-{clientRequest.TraceNumber}: {scrubbedRequestContent}");
-                    _logger.LogWarning($"Response-{clientRequest.TraceNumber}: {scrubbedResponseContent}");
+                    _logger.LogWarning("{Library} {MethodCall} {TraceNumber} {ScrubbedContent}", "PaymentechCore", "Request", clientRequest.TraceNumber, scrubbedRequestContent);
+                    _logger.LogWarning("{Library} {MethodCall} {TraceNumber} {ScrubbedContent}", "PaymentechCore", "Response", clientRequest.TraceNumber, scrubbedResponseContent);
                 }
                 else
                 {
-                    _logger.LogInformation($"Request-{clientRequest.TraceNumber}: {scrubbedRequestContent}");
-                    _logger.LogInformation($"Response-{clientRequest.TraceNumber}: {scrubbedResponseContent}");
+                    _logger.LogInformation("{Library} {MethodCall} {TraceNumber} {ScrubbedContent}", "PaymentechCore", "Request", clientRequest.TraceNumber, scrubbedRequestContent);
+                    _logger.LogInformation("{Library} {MethodCall} {TraceNumber} {ScrubbedContent}", "PaymentechCore", "Response", clientRequest.TraceNumber, scrubbedResponseContent);
                 }
             }
             clientResponse.ProcStatus = procStatus;
@@ -380,12 +401,12 @@ namespace PaymentechCore.Services
             return newTraceStr;
         }
 
-        public ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse UpdateAccount(accountUpdaterType accountUpdate, string traceNumber = null)
         {
             return UpdateAccountAsync(accountUpdate, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> UpdateAccountAsync(AccountUpdaterType accountUpdate, string traceNumber = null)
+        public async Task<ClientResponse> UpdateAccountAsync(accountUpdaterType accountUpdate, string traceNumber = null)
         {
             var xmlBody = new Request { Item = accountUpdate };
             var url = _endpoint.Url();
@@ -397,12 +418,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse EndOfDay(endOfDayType endOfDay, string traceNumber = null)
         {
             return EndOfDayAsync(endOfDay, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> EndOfDayAsync(EndOfDayType endOfDay, string traceNumber = null)
+        public async Task<ClientResponse> EndOfDayAsync(endOfDayType endOfDay, string traceNumber = null)
         {
             var xmlBody = new Request { Item = endOfDay };
             var url = _endpoint.Url();
@@ -414,12 +435,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse FlexCache(FlexCacheType flexCache, string traceNumber = null)
+        public ClientResponse FlexCache(flexCacheType flexCache, string traceNumber = null)
         {
             return FlexCacheAsync(flexCache, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> FlexCacheAsync(FlexCacheType flexCache, string traceNumber = null)
+        public async Task<ClientResponse> FlexCacheAsync(flexCacheType flexCache, string traceNumber = null)
         {
             var xmlBody = new Request { Item = flexCache };
             var url = _endpoint.Url();
@@ -431,12 +452,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Inquiry(InquiryType inquiry, string traceNumber = null)
+        public ClientResponse Inquiry(inquiryType inquiry, string traceNumber = null)
         {
             return InquiryAsync(inquiry, traceNumber).GetAwaiter().GetResult();
         }
         
-        public async Task<ClientResponse> InquiryAsync(InquiryType inquiry, string traceNumber = null)
+        public async Task<ClientResponse> InquiryAsync(inquiryType inquiry, string traceNumber = null)
         {
             var xmlBody = new Request { Item = inquiry };
             var url = _endpoint.Url();
@@ -448,12 +469,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse MarkForCapture(MarkForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse MarkForCapture(markForCaptureType markForCapture, string traceNumber = null)
         {
             return MarkForCaptureAsync(markForCapture, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> MarkForCaptureAsync(MarkForCaptureType markForCapture, string traceNumber = null)
+        public async Task<ClientResponse> MarkForCaptureAsync(markForCaptureType markForCapture, string traceNumber = null)
         {
             var xmlBody = new Request { Item = markForCapture };
             var url = _endpoint.Url();
@@ -465,12 +486,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse NewOrder(NewOrderType newOrder, string traceNumber = null)
+        public ClientResponse NewOrder(newOrderType newOrder, string traceNumber = null)
         {
             return NewOrderAsync(newOrder, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> NewOrderAsync(NewOrderType newOrder, string traceNumber = null)
+        public async Task<ClientResponse> NewOrderAsync(newOrderType newOrder, string traceNumber = null)
         {
             var xmlBody = new Request { Item = newOrder };
             var url = _endpoint.Url();
@@ -482,12 +503,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Profile(ProfileType profile, string traceNumber = null)
+        public ClientResponse Profile(profileType profile, string traceNumber = null)
         {
             return ProfileAsync(profile, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ProfileAsync(ProfileType profile, string traceNumber = null)
+        public async Task<ClientResponse> ProfileAsync(profileType profile, string traceNumber = null)
         {
             var xmlBody = new Request { Item = profile };
             var url = _endpoint.Url();
@@ -499,12 +520,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Reversal(ReversalType reversal, string traceNumber = null)
+        public ClientResponse Reversal(reversalType reversal, string traceNumber = null)
         {
             return ReversalAsync(reversal, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ReversalAsync(ReversalType reversal, string traceNumber = null)
+        public async Task<ClientResponse> ReversalAsync(reversalType reversal, string traceNumber = null)
         {
             var xmlBody = new Request { Item = reversal };
             var url = _endpoint.Url();
@@ -516,12 +537,12 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse SafetechFraudAnalysis(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse SafetechFraudAnalysis(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             return SafetechFraudAnalysisAsync(safetechFraudAnalysis, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> SafetechFraudAnalysisAsync(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public async Task<ClientResponse> SafetechFraudAnalysisAsync(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             var xmlBody = new Request { Item = safetechFraudAnalysis };
             var url = _endpoint.Url();

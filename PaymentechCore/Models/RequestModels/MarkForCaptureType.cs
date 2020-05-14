@@ -2,15 +2,15 @@ using System;
 
 namespace PaymentechCore.Models.RequestModels
 {
-    public partial class MarkForCaptureType
+    public partial class markForCaptureType
     {
-        public MarkForCaptureType() { }
+        public markForCaptureType() { }
 
-        public MarkForCaptureType(
+        public markForCaptureType(
             string orbitalConnectionUsername,
             string orbitalConnectionPassword,
             string merchantID,
-            Valid_Routing_Bins bin = Valid_Routing_Bins.Item000002,
+            validroutingbins bin = validroutingbins.Item000002,
             string terminalId = "001") : base()
         {
             OrbitalConnectionUsername = orbitalConnectionUsername;

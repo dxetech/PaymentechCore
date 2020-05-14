@@ -1,0 +1,2 @@
+﻿xsd hp-ia-dev_xmlconverter_schema_Request_PTI80.xsd /classes /namespace:PaymentechCore.Models.RequestModels
+xsd hp-ia-dev_xmlconverter_schema_Response_PTI80.xsd /classes /namespace:PaymentechCore.Models.ResponseModels
