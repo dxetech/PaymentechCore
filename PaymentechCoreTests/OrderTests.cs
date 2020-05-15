@@ -3,6 +3,8 @@ using PaymentechCore.Services;
 using PaymentechCore.Models;
 using PaymentechCore.Models.RequestModels;
 using PaymentechCore.Models.ResponseModels;
+using PaymentechCore.Models.ResponseModels.BaseModels;
+using PaymentechCore.Models.RequestModels.BaseModels;
 
 namespace PaymentechCoreTests
 {
@@ -20,14 +22,14 @@ namespace PaymentechCoreTests
         [Fact]
         public void ProfileOrder()
         {
-            var profile = ProfileTests.SetProfileDefaults(profileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var profile = ProfileTests.SetProfileDefaults(new CreateProfileType(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             var profileResult = _client.Profile(profile);
             Assert.NotNull(profileResult?.Response?.Item);
             var profileItem = (profileRespType)profileResult.Response.Item;
             Assert.Equal("0", profileItem.ProfileProcStatus);
             Assert.False(string.IsNullOrEmpty(profileItem.CustomerRefNum));
             var customerRefNum = profileItem.CustomerRefNum;
-            var order = new newOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
+            var order = new NewOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
             {
                 CustomerRefNum = customerRefNum,
                 OrderID = "100001",
@@ -42,7 +44,7 @@ namespace PaymentechCoreTests
         [Fact]
         public void CC_Order()
         {
-            var order = new newOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
+            var order = new NewOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
             {
                 OrderID = "100001",
                 Amount = PaymentechHelpers.ConvertAmount(10.00m),
@@ -67,7 +69,7 @@ namespace PaymentechCoreTests
         [Fact]
         public void Duplicate_CC_Order()
         {
-            var order = new newOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
+            var order = new NewOrderType(_credentials.Username, _credentials.Password, _credentials.MerchantId)
             {
                 OrderID = "100001",
                 Amount = PaymentechHelpers.ConvertAmount(10.00m),

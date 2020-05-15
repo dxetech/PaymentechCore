@@ -11,6 +11,8 @@ using PaymentechCore.Models.ResponseModels;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Net;
+using PaymentechCore.Models.RequestModels.BaseModels;
+using PaymentechCore.Models.ResponseModels.BaseModels;
 
 namespace PaymentechCore.Services
 {
@@ -401,14 +403,15 @@ namespace PaymentechCore.Services
             return newTraceStr;
         }
 
-        public ClientResponse UpdateAccount(accountUpdaterType accountUpdate, string traceNumber = null)
+        public ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null)
         {
             return UpdateAccountAsync(accountUpdate, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> UpdateAccountAsync(accountUpdaterType accountUpdate, string traceNumber = null)
+        public async Task<ClientResponse> UpdateAccountAsync(AccountUpdaterType accountUpdate, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = accountUpdate };
+            var item = accountUpdate.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -418,14 +421,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse EndOfDay(endOfDayType endOfDay, string traceNumber = null)
+        public ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null)
         {
             return EndOfDayAsync(endOfDay, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> EndOfDayAsync(endOfDayType endOfDay, string traceNumber = null)
+        public async Task<ClientResponse> EndOfDayAsync(EndOfDayType endOfDay, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = endOfDay };
+            var item = endOfDay.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -435,14 +439,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse FlexCache(flexCacheType flexCache, string traceNumber = null)
+        public ClientResponse FlexCache(FlexCacheType flexCache, string traceNumber = null)
         {
             return FlexCacheAsync(flexCache, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> FlexCacheAsync(flexCacheType flexCache, string traceNumber = null)
+        public async Task<ClientResponse> FlexCacheAsync(FlexCacheType flexCache, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = flexCache };
+            var item = flexCache.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -452,14 +457,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Inquiry(inquiryType inquiry, string traceNumber = null)
+        public ClientResponse Inquiry(InquiryType inquiry, string traceNumber = null)
         {
             return InquiryAsync(inquiry, traceNumber).GetAwaiter().GetResult();
         }
         
-        public async Task<ClientResponse> InquiryAsync(inquiryType inquiry, string traceNumber = null)
+        public async Task<ClientResponse> InquiryAsync(InquiryType inquiry, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = inquiry };
+            var item = inquiry.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -469,14 +475,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse MarkForCapture(markForCaptureType markForCapture, string traceNumber = null)
+        public ClientResponse MarkForCapture(MarkForCaptureType markForCapture, string traceNumber = null)
         {
             return MarkForCaptureAsync(markForCapture, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> MarkForCaptureAsync(markForCaptureType markForCapture, string traceNumber = null)
+        public async Task<ClientResponse> MarkForCaptureAsync(MarkForCaptureType markForCapture, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = markForCapture };
+            markForCaptureType item = markForCapture.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -486,14 +493,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse NewOrder(newOrderType newOrder, string traceNumber = null)
+        public ClientResponse NewOrder(NewOrderType newOrder, string traceNumber = null)
         {
             return NewOrderAsync(newOrder, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> NewOrderAsync(newOrderType newOrder, string traceNumber = null)
+        public async Task<ClientResponse> NewOrderAsync(NewOrderType newOrder, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = newOrder };
+            var item = newOrder.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -503,14 +511,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Profile(profileType profile, string traceNumber = null)
+        public ClientResponse Profile(ProfileType profile, string traceNumber = null)
         {
             return ProfileAsync(profile, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ProfileAsync(profileType profile, string traceNumber = null)
+        public async Task<ClientResponse> ProfileAsync(ProfileType profile, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = profile };
+            var item = profile.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -520,14 +529,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse Reversal(reversalType reversal, string traceNumber = null)
+        public ClientResponse Reversal(ReversalType reversal, string traceNumber = null)
         {
             return ReversalAsync(reversal, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> ReversalAsync(reversalType reversal, string traceNumber = null)
+        public async Task<ClientResponse> ReversalAsync(ReversalType reversal, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = reversal };
+            var item = reversal.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {
@@ -537,14 +547,15 @@ namespace PaymentechCore.Services
             return await SendRequestAsync(url, request);
         }
 
-        public ClientResponse SafetechFraudAnalysis(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public ClientResponse SafetechFraudAnalysis(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
             return SafetechFraudAnalysisAsync(safetechFraudAnalysis, traceNumber).GetAwaiter().GetResult();
         }
 
-        public async Task<ClientResponse> SafetechFraudAnalysisAsync(safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
+        public async Task<ClientResponse> SafetechFraudAnalysisAsync(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null)
         {
-            var xmlBody = new Request { Item = safetechFraudAnalysis };
+            var item = safetechFraudAnalysis.CopyToBase();
+            var xmlBody = new Request { Item = item };
             var url = _endpoint.Url();
             var request = new ClientRequest
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using PaymentechCore.Models.RequestModels;
+using PaymentechCore.Models.RequestModels.BaseModels;
 
 namespace PaymentechCore
 {

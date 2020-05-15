@@ -1,16 +1,14 @@
+using Newtonsoft.Json;
+using PaymentechCore.Models.RequestModels.BaseModels;
 using System;
 
 namespace PaymentechCore.Models.RequestModels
 {
-    public partial class profileType
+    public class ProfileType : profileType
     {
-        public profileType() { }
+        public ProfileType() : base() { }
 
-        public profileType(
-            string orbitalConnectionUsername,
-            string orbitalConnectionPassword,
-            string customerMerchantID,
-            validroutingbins customerBin = validroutingbins.Item000002) : base()
+        public ProfileType(string orbitalConnectionUsername, string orbitalConnectionPassword, string customerMerchantID, validroutingbins customerBin = validroutingbins.Item000002) : this()
         {
             OrbitalConnectionUsername = orbitalConnectionUsername;
             OrbitalConnectionPassword = orbitalConnectionPassword;
@@ -18,74 +16,62 @@ namespace PaymentechCore.Models.RequestModels
             CustomerBin = customerBin;
         }
 
-        public static profileType CreateProfile(
-            string orbitalConnectionUsername,
-            string orbitalConnectionPassword,
-            string customerMerchantID,
-            validroutingbins customerBin = validroutingbins.Item000002,
-            string customerCountryCode = "US",
-            string customerProfileOrderOverrideInd = "NO",
-            string customerProfileFromOrderInd = "A",
-            string customerAccountType = "CC",
-            string status = "A")
+        public profileType CopyToBase()
         {
-            var profile = new profileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = profileactiontypes.C;
-
-            profile.CustomerCountryCode = customerCountryCode;
-            profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
-            profile.CustomerProfileFromOrderInd = customerProfileFromOrderInd;
-            profile.CustomerAccountType = customerAccountType;
-            profile.Status = status;
-
-            return profile;
+            string json = JsonConvert.SerializeObject(this);
+            return JsonConvert.DeserializeObject<profileType>(json);
         }
+    }
 
-        public static profileType ReadProfile(
-            string orbitalConnectionUsername,
-            string orbitalConnectionPassword,
-            string customerMerchantID,
-            validroutingbins customerBin = validroutingbins.Item000002)
+    public class CreateProfileType : ProfileType
+    {
+        public CreateProfileType() : base() { }
+
+        public CreateProfileType(string orbitalConnectionUsername, string orbitalConnectionPassword, string customerMerchantID, validroutingbins customerBin = validroutingbins.Item000002, string customerCountryCode = "US", string customerProfileOrderOverrideInd = "NO", string customerProfileFromOrderInd = "A", string customerAccountType = "CC", string status = "A") : base(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin)
         {
-            var profile = new profileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = profileactiontypes.R;
+            CustomerProfileAction = profileactiontypes.C;
 
-            return profile;
+            CustomerCountryCode = customerCountryCode;
+            CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
+            CustomerProfileFromOrderInd = customerProfileFromOrderInd;
+            CustomerAccountType = customerAccountType;
+            Status = status;
         }
+    }
 
-        public static profileType UpdateProfile(
-            string orbitalConnectionUsername,
-            string orbitalConnectionPassword,
-            string customerMerchantID,
-            validroutingbins customerBin = validroutingbins.Item000002,
-            string customerCountryCode = "US",
-            string customerProfileOrderOverrideInd = "NO",
-            string customerProfileFromOrderInd = "A",
-            string customerAccountType = "CC",
-            string status = "A")
+    public class ReadProfileType : ProfileType
+    {
+        public ReadProfileType() : base() { }
+
+        public ReadProfileType(string orbitalConnectionUsername, string orbitalConnectionPassword, string customerMerchantID, validroutingbins customerBin = validroutingbins.Item000002) : base(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin)
         {
-            var profile = new profileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = profileactiontypes.U;
-
-            profile.CustomerCountryCode = customerCountryCode;
-            profile.CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
-            profile.CustomerProfileFromOrderInd = customerProfileFromOrderInd;
-            profile.CustomerAccountType = customerAccountType;
-            profile.Status = status;
-
-            return profile;
+            CustomerProfileAction = profileactiontypes.R;
         }
+    }
 
-        public static profileType DestroyProfile(
-            string orbitalConnectionUsername,
-            string orbitalConnectionPassword,
-            string customerMerchantID,
-            validroutingbins customerBin = validroutingbins.Item000002)
+    public class UpdateProfileType : ProfileType
+    {
+        public UpdateProfileType() : base() { }
+
+        public UpdateProfileType(string orbitalConnectionUsername, string orbitalConnectionPassword, string customerMerchantID, validroutingbins customerBin = validroutingbins.Item000002, string customerCountryCode = "US", string customerProfileOrderOverrideInd = "NO", string customerProfileFromOrderInd = "A", string customerAccountType = "CC", string status = "A") : base(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin)
         {
-            var profile = new profileType(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin);
-            profile.CustomerProfileAction = profileactiontypes.D;
+            CustomerProfileAction = profileactiontypes.U;
 
-            return profile;
+            CustomerCountryCode = customerCountryCode;
+            CustomerProfileOrderOverrideInd = customerProfileOrderOverrideInd;
+            CustomerProfileFromOrderInd = customerProfileFromOrderInd;
+            CustomerAccountType = customerAccountType;
+            Status = status;
+        }
+    }
+
+    public class DestroyProfileType : ProfileType
+    {
+        public DestroyProfileType() : base() { }
+
+        public DestroyProfileType(string orbitalConnectionUsername, string orbitalConnectionPassword, string customerMerchantID, validroutingbins customerBin = validroutingbins.Item000002) : base(orbitalConnectionUsername, orbitalConnectionPassword, customerMerchantID, customerBin)
+        {
+            CustomerProfileAction = profileactiontypes.D;
         }
     }
 }

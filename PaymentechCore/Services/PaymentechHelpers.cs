@@ -68,7 +68,7 @@ namespace PaymentechCore.Services
             return null;
         }
 
-        public static string CardSecValInd(newOrderType order)
+        public static string CardSecValInd(NewOrderType order)
         {
             // Card Security Presence Indicator
             // For Discover/Visa

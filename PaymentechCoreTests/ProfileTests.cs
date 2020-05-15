@@ -7,6 +7,7 @@ using PaymentechCore.Models.ResponseModels;
 using Microsoft.Extensions.Options;
 using PaymentechCore;
 using static PaymentechCore.PaymentechConstants;
+using PaymentechCore.Models.ResponseModels.BaseModels;
 
 namespace PaymentechCoreTests
 {
@@ -21,7 +22,7 @@ namespace PaymentechCoreTests
             _credentials = _client.Credentials();
         }
 
-        public static profileType SetProfileDefaults(profileType profile)
+        public static ProfileType SetProfileDefaults(ProfileType profile)
         {
             profile.CustomerName = "Test User";
             profile.CustomerAddress1 = "101 Main St.";
@@ -40,7 +41,7 @@ namespace PaymentechCoreTests
         [Fact]
         public void ProfileLifecycle()
         {
-            var createProfile = SetProfileDefaults(profileType.CreateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var createProfile = SetProfileDefaults(new CreateProfileType(_credentials.Username, _credentials.Password, _credentials.MerchantId));
 
             // Profile creation
             var createResult = _client.Profile(createProfile);
@@ -61,7 +62,7 @@ namespace PaymentechCoreTests
             var customerRefNum = createData.CustomerRefNum;
 
             // Profile reading
-            var readProfile = SetProfileDefaults(profileType.ReadProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var readProfile = SetProfileDefaults(new ReadProfileType(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             readProfile.CustomerRefNum = customerRefNum;
             readProfile.CCAccountNum = string.Empty;
             var readResult = _client.Profile(readProfile);
@@ -80,7 +81,7 @@ namespace PaymentechCoreTests
             Assert.Equal(readProfile.CCExpireDate.ToUpper(), readData.CCExpireDate.ToUpper());
 
             // Profile updating
-            var updateProfile = SetProfileDefaults(profileType.UpdateProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var updateProfile = SetProfileDefaults(new UpdateProfileType(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             updateProfile.CustomerRefNum = customerRefNum;
             updateProfile.CCAccountNum = string.Empty;
             updateProfile.CustomerName = "Example Customer";
@@ -103,7 +104,7 @@ namespace PaymentechCoreTests
             Assert.Equal(updateProfile.CCExpireDate.ToUpper(), updateData.CCExpireDate.ToUpper());
 
             // Profile deletion
-            var deleteProfile = SetProfileDefaults(profileType.DestroyProfile(_credentials.Username, _credentials.Password, _credentials.MerchantId));
+            var deleteProfile = SetProfileDefaults(new DestroyProfileType(_credentials.Username, _credentials.Password, _credentials.MerchantId));
             deleteProfile.CustomerRefNum = customerRefNum;
             deleteProfile.CCAccountNum = string.Empty;
             var deleteResult = _client.Profile(deleteProfile);

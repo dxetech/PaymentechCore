@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PaymentechCore.Models;
+using PaymentechCore.Models.RequestModels;
 using PaymentechCore.Models.ResponseModels;
 
 namespace PaymentechCore.Services
@@ -11,23 +12,23 @@ namespace PaymentechCore.Services
         string InterfaceVersion();
         IPaymentechCache GetCache();
         string NewTraceNumber();
-        ClientResponse UpdateAccount(Models.RequestModels.accountUpdaterType accountUpdate, string traceNumber = null);
-        Task<ClientResponse> UpdateAccountAsync(Models.RequestModels.accountUpdaterType accountUpdate, string traceNumber = null);
-        ClientResponse EndOfDay(Models.RequestModels.endOfDayType endOfDay, string traceNumber = null);
-        Task<ClientResponse> EndOfDayAsync(Models.RequestModels.endOfDayType endOfDay, string traceNumber = null);
-        ClientResponse FlexCache(Models.RequestModels.flexCacheType flexCache, string traceNumber = null);
-        Task<ClientResponse> FlexCacheAsync(Models.RequestModels.flexCacheType flexCache, string traceNumber = null);
-        ClientResponse Inquiry(Models.RequestModels.inquiryType inquiry, string traceNumber = null);
-        Task<ClientResponse> InquiryAsync(Models.RequestModels.inquiryType inquiry, string traceNumber = null);
-        ClientResponse MarkForCapture(Models.RequestModels.markForCaptureType markForCapture, string traceNumber = null);
-        Task<ClientResponse> MarkForCaptureAsync(Models.RequestModels.markForCaptureType markForCapture, string traceNumber = null);
-        ClientResponse NewOrder(Models.RequestModels.newOrderType newOrder, string traceNumber = null);
-        Task<ClientResponse> NewOrderAsync(Models.RequestModels.newOrderType newOrder, string traceNumber = null);
-        ClientResponse Profile(Models.RequestModels.profileType profile, string traceNumber = null);
-        Task<ClientResponse> ProfileAsync(Models.RequestModels.profileType profile, string traceNumber = null);
-        ClientResponse Reversal(Models.RequestModels.reversalType reversal, string traceNumber = null);
-        Task<ClientResponse> ReversalAsync(Models.RequestModels.reversalType reversal, string traceNumber = null);
-        ClientResponse SafetechFraudAnalysis(Models.RequestModels.safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
-        Task<ClientResponse> SafetechFraudAnalysisAsync(Models.RequestModels.safetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
+        ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null);
+        Task<ClientResponse> UpdateAccountAsync(AccountUpdaterType accountUpdate, string traceNumber = null);
+        ClientResponse EndOfDay(EndOfDayType endOfDay, string traceNumber = null);
+        Task<ClientResponse> EndOfDayAsync(EndOfDayType endOfDay, string traceNumber = null);
+        ClientResponse FlexCache(FlexCacheType flexCache, string traceNumber = null);
+        Task<ClientResponse> FlexCacheAsync(FlexCacheType flexCache, string traceNumber = null);
+        ClientResponse Inquiry(InquiryType inquiry, string traceNumber = null);
+        Task<ClientResponse> InquiryAsync(InquiryType inquiry, string traceNumber = null);
+        ClientResponse MarkForCapture(MarkForCaptureType markForCapture, string traceNumber = null);
+        Task<ClientResponse> MarkForCaptureAsync(MarkForCaptureType markForCapture, string traceNumber = null);
+        ClientResponse NewOrder(NewOrderType newOrder, string traceNumber = null);
+        Task<ClientResponse> NewOrderAsync(NewOrderType newOrder, string traceNumber = null);
+        ClientResponse Profile(ProfileType profile, string traceNumber = null);
+        Task<ClientResponse> ProfileAsync(ProfileType profile, string traceNumber = null);
+        ClientResponse Reversal(ReversalType reversal, string traceNumber = null);
+        Task<ClientResponse> ReversalAsync(ReversalType reversal, string traceNumber = null);
+        ClientResponse SafetechFraudAnalysis(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
+        Task<ClientResponse> SafetechFraudAnalysisAsync(SafetechFraudAnalysisType safetechFraudAnalysis, string traceNumber = null);
     }
 }
