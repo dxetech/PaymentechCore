@@ -8,8 +8,9 @@ namespace PaymentechCore.Services
 {
     public interface IPaymentechClient
     {
-        Credentials Credentials();
-        string InterfaceVersion();
+        Credentials Credentials { get; set; }
+        string InterfaceVersion { get; set; }
+        Endpoint Endpoint { get; set; }
         IPaymentechCache GetCache();
         string NewTraceNumber();
         ClientResponse UpdateAccount(AccountUpdaterType accountUpdate, string traceNumber = null);

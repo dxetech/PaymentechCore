@@ -13,13 +13,13 @@ namespace PaymentechCoreTests
         public ClientTests()
         {
             _client = new PaymentechTestClient();
-            _credentials = _client.Credentials();
+            _credentials = _client.Credentials;
         }
 
         [Fact]
         public void EnvSetup()
         {
-            var interfaceVersion = _client.InterfaceVersion();
+            var interfaceVersion = _client.InterfaceVersion;
             Assert.True(!string.IsNullOrEmpty(interfaceVersion));
             Assert.True(!string.IsNullOrEmpty(_credentials.Username));
             Assert.True(!string.IsNullOrEmpty(_credentials.Password));

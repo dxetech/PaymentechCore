@@ -5,7 +5,7 @@
     <Company>DXE Technologies LLC</Company>
     <Authors>James Maxwell</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.3.3</Version>
+    <Version>1.3.4</Version>
     <Description>A .net core client for Chase Paymentech Orbital XML API version 8.0.0</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>

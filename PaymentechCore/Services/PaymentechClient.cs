@@ -21,20 +21,34 @@ namespace PaymentechCore.Services
         public string InterfaceVersion { get; set; }
         public Credentials Credentials { get; set; }
         public bool Production { get; set; }
+        public string Platform { get; set; } = "pns";
     }
 
     public class PaymentechClient : IPaymentechClient
     {
         static readonly long MaxTraceNumber = 9999999999999999;
-        readonly PaymentechClientOptions _options;
-        readonly Endpoint _endpoint;
+        public string InterfaceVersion { get; set; }
+        public Credentials Credentials { get; set; } = new Credentials();
+        public Endpoint Endpoint { get; set; } = new Endpoint();
         readonly IPaymentechCache _cache;
         readonly ILogger _logger;
 
-        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor)
+        public PaymentechClient() { }
+
+        public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor) : this()
         {
-            _options = optionsAccessor.Value;
-            _endpoint = new Endpoint(_options.Credentials, _options.Production);
+            var options = optionsAccessor.Value;
+
+            if (!string.IsNullOrEmpty(options?.InterfaceVersion))
+            {
+                InterfaceVersion = options.InterfaceVersion;
+            }
+            if (options?.Credentials != null)
+            {
+                Credentials = options.Credentials;
+            }
+
+            Endpoint = new Endpoint(options.Production, options.Platform);
         }
 
         public PaymentechClient(IOptions<PaymentechClientOptions> optionsAccessor, IPaymentechCache cache) : this(optionsAccessor)
@@ -253,7 +267,7 @@ namespace PaymentechCore.Services
                 }
             }
 
-            var headers = new Headers(clientRequest.TraceNumber, _options.InterfaceVersion, _options.Credentials.MerchantId);
+            var headers = new Headers(clientRequest.TraceNumber, InterfaceVersion, Credentials.MerchantId);
 
             var contentType = headers.ContentType();
             using var client = new HttpClient
@@ -367,16 +381,6 @@ namespace PaymentechCore.Services
             return clientResponse;
         }
 
-        public Credentials Credentials()
-        {
-            return _options?.Credentials;
-        }
-
-        public string InterfaceVersion()
-        {
-            return _options?.InterfaceVersion;
-        }
-
         public IPaymentechCache GetCache()
         {
             return _cache;
@@ -412,7 +416,7 @@ namespace PaymentechCore.Services
         {
             var item = accountUpdate.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -430,7 +434,7 @@ namespace PaymentechCore.Services
         {
             var item = endOfDay.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -448,7 +452,7 @@ namespace PaymentechCore.Services
         {
             var item = flexCache.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -466,7 +470,7 @@ namespace PaymentechCore.Services
         {
             var item = inquiry.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -484,7 +488,7 @@ namespace PaymentechCore.Services
         {
             markForCaptureType item = markForCapture.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -502,7 +506,7 @@ namespace PaymentechCore.Services
         {
             var item = newOrder.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -520,7 +524,7 @@ namespace PaymentechCore.Services
         {
             var item = profile.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -538,7 +542,7 @@ namespace PaymentechCore.Services
         {
             var item = reversal.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,
@@ -556,7 +560,7 @@ namespace PaymentechCore.Services
         {
             var item = safetechFraudAnalysis.CopyToBase();
             var xmlBody = new Request { Item = item };
-            var url = _endpoint.Url();
+            var url = Endpoint.Url();
             var request = new ClientRequest
             {
                 Request = xmlBody,

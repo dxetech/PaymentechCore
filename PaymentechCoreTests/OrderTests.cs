@@ -16,7 +16,7 @@ namespace PaymentechCoreTests
         public OrderTests()
         {
             _client = new PaymentechTestClient();
-            _credentials = _client.Credentials();
+            _credentials = _client.Credentials;
         }
 
         [Fact]

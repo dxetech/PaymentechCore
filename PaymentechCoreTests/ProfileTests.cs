@@ -19,7 +19,7 @@ namespace PaymentechCoreTests
         public ProfileTests()
         {
             _client = new PaymentechTestClient();
-            _credentials = _client.Credentials();
+            _credentials = _client.Credentials;
         }
 
         public static ProfileType SetProfileDefaults(ProfileType profile)
